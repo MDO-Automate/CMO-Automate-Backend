@@ -1,8 +1,9 @@
 import { Itinerario } from 'src/modules/itinerarios/entities/itinerario.entity';
 import { Ruta } from 'src/modules/rutas/entities/ruta.entity';
-import { Column, JoinColumn, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 
-export class KmAnalisi {
+@Entity()
+export class KmAnalisis {
     @Column() idSae: string
 
     @Column() vehiculo: string
