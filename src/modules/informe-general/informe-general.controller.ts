@@ -1,8 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { InformeGeneralService } from './informe-general.service';
 import { CreateInformeGeneralDto } from './dto/create-informe-general.dto';
 import { UpdateInformeGeneralDto } from './dto/update-informe-general.dto';
 
+@ApiTags('Informe general')
 @Controller('informe-general')
 export class InformeGeneralController {
   constructor(private readonly informeGeneralService: InformeGeneralService) {}

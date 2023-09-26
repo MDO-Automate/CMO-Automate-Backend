@@ -1,8 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { ResumenElectricaService } from './resumen-electrica.service';
 import { CreateResumenElectricaDto } from './dto/create-resumen-electrica.dto';
 import { UpdateResumenElectricaDto } from './dto/update-resumen-electrica.dto';
 
+@ApiTags('Resumen eléctricas')
 @Controller('resumen-electrica')
 export class ResumenElectricaController {
   constructor(private readonly resumenElectricaService: ResumenElectricaService) {}

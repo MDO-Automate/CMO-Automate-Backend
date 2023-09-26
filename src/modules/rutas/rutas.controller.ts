@@ -1,8 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { RutasService } from './rutas.service';
 import { CreateRutaDto } from './dto/create-ruta.dto';
 import { UpdateRutaDto } from './dto/update-ruta.dto';
 
+@ApiTags('Rutas')
 @Controller('rutas')
 export class RutasController {
   constructor(private readonly rutasService: RutasService) {}

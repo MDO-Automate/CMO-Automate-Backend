@@ -1,11 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException
+} from '@nestjs/common';
+import { FileInterceptor,  } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+
 import { KmAnalisisService } from './km-analisis.service';
 import { CreateKmAnalisiDto } from './dto/create-km-analisi.dto';
 import { UpdateKmAnalisiDto } from './dto/update-km-analisi.dto';
+import { FileUploadDto } from './dto/upload-file.dto';
+import { fileFilterXSL } from 'src/utils/fileFilterXSL';
 
+@ApiTags('KM análisis')
 @Controller('km-analisis')
 export class KmAnalisisController {
   constructor(private readonly kmAnalisisService: KmAnalisisService) {}
+
+  @Post('upload-file')
+  @UseInterceptors(FileInterceptor('file', {
+    fileFilter: fileFilterXSL
+  }))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Archivo de informe de servicio en excel',
+    type: FileUploadDto,
+  })
+  uploadFile(@UploadedFile() file) {
+    if(!file){
+      throw new 
+        BadRequestException(
+          'Se debe de enviar un archivo en el body de la petición'
+        )
+    }
+    return this.kmAnalisisService.processFile(file)
+  }
 
   @Post()
   create(@Body() createKmAnalisiDto: CreateKmAnalisiDto) {
@@ -23,7 +59,10 @@ export class KmAnalisisController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateKmAnalisiDto: UpdateKmAnalisiDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateKmAnalisiDto: UpdateKmAnalisiDto,
+  ) {
     return this.kmAnalisisService.update(+id, updateKmAnalisiDto);
   }
 
