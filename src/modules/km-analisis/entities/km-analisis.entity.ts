@@ -1,9 +1,11 @@
 import { Itinerario } from 'src/modules/itinerarios/entities/itinerario.entity';
 import { Ruta } from 'src/modules/rutas/entities/ruta.entity';
-import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class KmAnalisis {
+    @PrimaryGeneratedColumn() id: number
+
     @Column() idSae: string
 
     @Column() vehiculo: string
