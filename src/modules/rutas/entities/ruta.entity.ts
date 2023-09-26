@@ -1,5 +1,5 @@
 import { Itinerario } from 'src/modules/itinerarios/entities/itinerario.entity';
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Ruta {
@@ -23,16 +23,16 @@ export class Ruta {
 
     @Column() kmItinerarioRepro4: number
 
-    @OneToMany(() => Itinerario, Itinerario => Itinerario.id)
+    @ManyToOne(() => Itinerario, Itinerario => Itinerario.id)
     @JoinColumn() itinerario1: Itinerario
 
-    @OneToMany(() => Itinerario, Itinerario => Itinerario.id)
+    @ManyToOne(() => Itinerario, Itinerario => Itinerario.id)
     @JoinColumn() itinerario2: Itinerario
 
-    @OneToMany(() => Itinerario, Itinerario => Itinerario.id)
+    @ManyToOne(() => Itinerario, Itinerario => Itinerario.id)
     @JoinColumn() itinerario3: Itinerario
 
-    @OneToMany(() => Itinerario, Itinerario => Itinerario.id)
+    @ManyToOne(() => Itinerario, Itinerario => Itinerario.id)
     @JoinColumn() itinerario4: Itinerario
 
     @Column({ type: 'time' }) inicioHabil: string

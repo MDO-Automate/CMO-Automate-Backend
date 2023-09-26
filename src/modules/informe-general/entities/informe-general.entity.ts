@@ -1,11 +1,11 @@
 import { Ruta } from 'src/modules/rutas/entities/ruta.entity';
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class InformeGeneral {
     @PrimaryGeneratedColumn() fecha: string
 
-    @OneToMany(()=> Ruta, ruta => ruta.id)
+    @ManyToOne(()=> Ruta, ruta => ruta.id)
     @JoinColumn() linea: Ruta
 
     @Column() itinerario1: number

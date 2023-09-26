@@ -1,6 +1,6 @@
 import { Itinerario } from 'src/modules/itinerarios/entities/itinerario.entity';
 import { Ruta } from 'src/modules/rutas/entities/ruta.entity';
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class KmAnalisis {
@@ -14,10 +14,10 @@ export class KmAnalisis {
 
     @Column() empleado: string
 
-    @OneToMany(() => Ruta, ruta => ruta.id)
+    @ManyToOne(() => Ruta, ruta => ruta.id)
     @JoinColumn() linea: Ruta
 
-    @OneToMany(() => Itinerario, Itinerario => Itinerario.id)
+    @ManyToOne(() => Itinerario, Itinerario => Itinerario.id)
     @JoinColumn() itinerario: Itinerario
 
     @Column({ type: 'time' }) horaSalida: string
