@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-
 import { CreateKmAnalisiDto } from './dto/create-km-analisi.dto';
 import { UpdateKmAnalisiDto } from './dto/update-km-analisi.dto';
 import { KmProcessFileService } from './km-processfile.service';
@@ -8,11 +7,13 @@ import { KmProcessFileService } from './km-processfile.service';
 @Injectable()
 export class KmAnalisisService {
 
-  constructor(private processFileService: KmProcessFileService ){}
+  constructor(
+    private processFileService: KmProcessFileService,
+  ){}
 
   async processFile(file: any){
-    const processedData = this.processFileService.getProcessedData(file)
-    return {describe : 'Archivo procesado correctamente.', processedData }
+    const processedData = await this.processFileService.getProcessedData(file)
+    return {describe : 'Archivo procesado correctamente.', processedData } 
   }
 
   create(createKmAnalisiDto: CreateKmAnalisiDto) {

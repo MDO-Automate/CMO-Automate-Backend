@@ -24,16 +24,16 @@ export class Ruta {
     @Column() kmItinerarioRepro4: number
 
     @ManyToOne(() => Itinerario, Itinerario => Itinerario.id)
-    @JoinColumn() itinerario1: Itinerario
+    @JoinColumn({ name: 'itinerario1' }) itinerario1: Itinerario
 
     @ManyToOne(() => Itinerario, Itinerario => Itinerario.id)
-    @JoinColumn() itinerario2: Itinerario
+    @JoinColumn({ name: 'itinerario2' }) itinerario2: Itinerario
 
     @ManyToOne(() => Itinerario, Itinerario => Itinerario.id)
-    @JoinColumn() itinerario3: Itinerario
+    @JoinColumn({ name: 'itinerario3' }) itinerario3: Itinerario
 
     @ManyToOne(() => Itinerario, Itinerario => Itinerario.id)
-    @JoinColumn() itinerario4: Itinerario
+    @JoinColumn({ name: 'itinerario4' }) itinerario4: Itinerario
 
     @Column({ type: 'time' }) inicioHabil: string
 

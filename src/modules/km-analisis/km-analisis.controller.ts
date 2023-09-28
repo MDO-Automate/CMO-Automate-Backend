@@ -33,7 +33,7 @@ export class KmAnalisisController {
     description: 'Archivo de informe de servicio en excel',
     type: FileUploadDto,
   })
-  uploadFile(@UploadedFile() file) {
+  uploadFile(@UploadedFile() file: any) {
     if(!file){
       throw new 
         BadRequestException(
