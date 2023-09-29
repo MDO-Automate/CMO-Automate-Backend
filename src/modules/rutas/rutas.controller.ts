@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Delete, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { RutasService } from './rutas.service';
+import { CreateRutaDto } from './dto/create-ruta.dto';
+import { UpdateRutaDto } from './dto/update-ruta.dto';
 
 
 @ApiTags('Rutas')
@@ -10,8 +12,8 @@ export class RutasController {
   constructor(private readonly rutasService: RutasService) {}
 
   @Post()
-  create() {
-    return this.rutasService.create();
+  create(@Body() createRutaDto: CreateRutaDto) {
+    return this.rutasService.create(createRutaDto);
   }
 
   @Get()
@@ -25,8 +27,8 @@ export class RutasController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string) {
-    return this.rutasService.update(+id);
+  update(@Param('id') id: string, @Body() UpdateRutaDto: UpdateRutaDto) {
+    return this.rutasService.update(+id, UpdateRutaDto);
   }
 
   @Delete(':id')

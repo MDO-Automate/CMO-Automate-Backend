@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateItinerarioDto } from './create-itinerario.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
-export class UpdateItinerarioDto extends PartialType(CreateItinerarioDto) {}
+export class UpdateItinerarioDto {
+    @ApiProperty()
+    @IsString()
+    nombre: string
+}

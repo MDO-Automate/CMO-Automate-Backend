@@ -20,18 +20,18 @@ export class ResumenElectricaController {
     return this.resumenElectricaService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.resumenElectricaService.findOne(+id);
+  @Get(':fecha')
+  findOne(@Param('fecha') fecha: string) {
+    return this.resumenElectricaService.findOne(fecha);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateResumenElectricaDto: UpdateResumenElectricaDto) {
-    return this.resumenElectricaService.update(+id, updateResumenElectricaDto);
+  @Patch(':fecha')
+  update(@Param('fecha') fecha: string, @Body() updateResumenElectricaDto: UpdateResumenElectricaDto) {
+    return this.resumenElectricaService.update(fecha, updateResumenElectricaDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.resumenElectricaService.remove(+id);
+  @Delete(':fecha')
+  remove(@Param('fecha') fecha: string) {
+    return this.resumenElectricaService.remove(fecha);
   }
 }
