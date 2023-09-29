@@ -30,7 +30,20 @@ export class KmProcessFileService {
 
   async averageRound(data: KmAnalisis[]) {
 		const routeName = data[0].linea
-  	const routeDetails = await this.routeService.getRouteDetails(`${routeName}`)
-		return routeDetails
+    const date = data[0].inicioServicio.split(' ')[0]
+    
+  	//const routeDetails = await this.routeService.getRouteDetails(`${routeName}`)
+    const { startRoute, endRoute } = await this.routeService.getSchedulesByRoutAndDate(`${routeName}`, date)
+
+    const response = await Promise.all(data.map(async(item) => {   
+      const startTime = item.inicioServicioEfectivo.split(' ')[1]
+      const endTime = item.finServicioEfectivo.split(' ')[1]
+
+      if(startTime < startRoute  || endRoute > endTime  ){
+        return ({...item, fueraHorario: true  })
+      }
+
+    }))
+		return response
   }
 }

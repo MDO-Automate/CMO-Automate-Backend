@@ -3,16 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Ruta } from './entities/ruta.entity';
 import { Repository } from 'typeorm';
 import { getAaverageRoute } from 'src/utils/getAverageRoute';
+import { getDayType, getFormatDate } from 'src/utils/date';
 
 @Injectable()
 export class RutasService {
+  route: string
 
   constructor(  
     @InjectRepository(Ruta) private rutasRepository: Repository<Ruta>
   ){}
 
   async getRouteDetails(route: string){
-
     const routeDetails = await this.rutasRepository
       .createQueryBuilder('r')
       .innerJoinAndSelect('r.itinerario1', 'i', 'i.id = r.itinerario1')
@@ -57,8 +58,31 @@ export class RutasService {
       finSabado,
       finDomingo,
       medias: averageKm,
-    };
-  };
+    }
+  }
+
+  async getSchedulesByRoutAndDate(route: string, date: string){
+    const routeDetails = await this.getRouteDetails(route)
+    const typeDay = getDayType(getFormatDate(date))
+
+    const schedules = {
+      habil: {
+        start: routeDetails.inicioHabil,
+        end: routeDetails.finHabil
+      },
+      saturday: {
+        start: routeDetails.inicioSabado,
+        end: routeDetails.finSabado
+      },
+      sunday: {
+        start: routeDetails.inicioDomingo,
+        end: routeDetails.finDomingo
+      }
+    }
+
+    return schedules[`${typeDay}`]
+
+  }
 
   create() {
     return 'This action adds a new ruta';
