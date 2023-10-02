@@ -5,19 +5,19 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   UseInterceptors,
   UploadedFile,
-  BadRequestException
-} from '@nestjs/common';
-import { FileInterceptor,  } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+  BadRequestException,
+  HttpCode
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
 
-import { KmAnalisisService } from './km-analisis.service';
-import { CreateKmAnalisiDto } from './dto/create-km-analisi.dto';
-import { UpdateKmAnalisiDto } from './dto/update-km-analisi.dto';
-import { FileUploadDto } from './dto/upload-file.dto';
-import { fileFilterXSL } from 'src/utils/fileFilterXSL';
+import { KmAnalisisService } from './km-analisis.service'
+import { CreateKmAnalisiDto } from './dto/create-km-analisi.dto'
+import { UpdateKmAnalisiDto } from './dto/update-km-analisi.dto'
+import { FileUploadDto } from './dto/upload-file.dto'
+import { fileFilterXSL } from 'src/utils/fileFilterXSL'
 
 @ApiTags('KM análisis')
 @Controller('km-analisis')
@@ -25,6 +25,7 @@ export class KmAnalisisController {
   constructor(private readonly kmAnalisisService: KmAnalisisService) {}
 
   @Post('upload-file')
+  @HttpCode(200)
   @UseInterceptors(FileInterceptor('file', {
     fileFilter: fileFilterXSL
   }))

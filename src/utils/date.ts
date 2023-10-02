@@ -19,3 +19,12 @@ export const getFormatDate = (date: string) =>{
     const newDate = new Date(`${year}-${month}-${day}`)
     return newDate
 } 
+
+export const getFormatHours = (hourString: string)=>{
+    const hourSplit = hourString.split(':')
+    const hour = hourSplit[0].padStart(2, '0')
+    const minutes = hourSplit[1].padStart(2, '0')
+    const seconds = hourSplit[1].padStart(2, '0')
+    
+    return `${hour}:${minutes}:${seconds}`
+}

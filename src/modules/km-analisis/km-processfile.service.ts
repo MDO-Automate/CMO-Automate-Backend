@@ -4,6 +4,7 @@ import * as xlsx from 'xlsx';
 import { KmAnalisis } from './entities/km-analisis.entity';
 import { getDataKm } from 'src/utils/getDataKM';
 import { RutasDetailsService } from '../rutas/rutas-details.service';
+import { getFormatHours } from 'src/utils/date';
 
 @Injectable()
 export class KmProcessFileService {
@@ -23,43 +24,58 @@ export class KmProcessFileService {
   }
 
   async averageRound(data: KmAnalisis[]) {
-    const minDistance = 500
-
     const routeName = data[0].linea
+    const newData = await this.getValidateData(data, `${routeName}`)
+    return newData;
+  }
+
+ async getValidateData(data: KmAnalisis[], routeName: string){
+    const minDistance = 500
     const date = data[0].inicioServicio.split(' ')[0]
-    //const routeDetails = await this.routeDetailsService.getRouteDetails(`${routeName}`)
-
-    const newData = await Promise.all(
+    const { startRoute } = await this.routeDetailsService.getSchedulesByRoutAndDate(
+      `${routeName}`,
+      date,
+    )
+  
+    return await Promise.all(
       data.map(async (item) => {
-        const { name, media } =
-          await this.routeDetailsService.getItineraryDistance(
-            `${routeName}`,
-            `${item.itinerario}`,
-          )
-        const { startRoute, endRoute } =
-          await this.routeDetailsService.getSchedulesByRoutAndDate(
-            `${routeName}`,
-            date,
-          )
+        const porcParada = parseInt(item.porcParada)
+        const start = getFormatHours(item.inicioServicioEfectivo.split(' ')[1])
+        const { name, media } = await this.routeDetailsService.getItineraryDistance(`${routeName}`,`${item.itinerario}`)
 
-        console.log(startRoute, endRoute);
-
-        const porcParada = parseInt(item.porcParada.replace('%', ''))
         let kmDistance = parseInt(`${item.distancia}`)
-
-        if (kmDistance < minDistance) {
-          kmDistance = 0;
-          item = { ...item, minor500: true }
-        }
+      
+        //Validación de criterios
         if (kmDistance > 0 && porcParada < 5) {
-          kmDistance = 0;
-          item = { ...item, distanciaYParadas: true }
+          kmDistance = 0
+          item = { 
+            ...item, 
+            distanciaYParadas: true 
+          }
         }
-        if (kmDistance < media && porcParada > 99) {
-          kmDistance = media;
-          item = { ...item, distanciaYMedia: true }
+        if (kmDistance < minDistance) {
+          kmDistance = 0
+          item = 
+          { ...item, 
+            minor500: true 
+          }
         }
-        const kmItinerary = JSON.parse(`{ "${name}": ${kmDistance} }`)
+        if (kmDistance < media && porcParada > 99) {   
+          kmDistance = media
+          item = { 
+            ...item, 
+            distanciaYMedia: true 
+          }
+        }
+        if(start < startRoute){
+          item = { 
+            ...item, 
+            fueraHorario: true 
+          }
+        }
+
+        //le asigna km1, km2, km3... dependiendo del itinerario.
+        const kmItinerary = JSON.parse(`{ "${name}": ${ kmDistance } }`)
         return {
           ...item,
           ...kmItinerary,
@@ -67,7 +83,7 @@ export class KmProcessFileService {
         }
       })
     )
-
-    return newData;
   }
+
+  
 }

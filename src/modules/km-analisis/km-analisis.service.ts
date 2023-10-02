@@ -17,7 +17,11 @@ export class KmAnalisisService {
 
   async processFile(file: any){
     const processedData = await this.processFileService.getProcessedData(file)
-    return {describe : 'Archivo procesado correctamente.', processedData } 
+    return {
+      statusCode: 200,
+      describe : 'Archivo procesado correctamente.', 
+      processedData 
+    } 
   }
 
   create(createKmAnalisiDto: CreateKmAnalisiDto) {
