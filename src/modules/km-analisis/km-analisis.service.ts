@@ -3,12 +3,16 @@ import { Injectable } from '@nestjs/common';
 import { CreateKmAnalisiDto } from './dto/create-km-analisi.dto';
 import { UpdateKmAnalisiDto } from './dto/update-km-analisi.dto';
 import { KmProcessFileService } from './km-processfile.service';
+import { KmAnalisis } from './entities/km-analisis.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class KmAnalisisService {
 
   constructor(
     private processFileService: KmProcessFileService,
+    @InjectRepository(KmAnalisis) private kmAnalisisRepository: Repository<KmAnalisis>
   ){}
 
   async processFile(file: any){
@@ -17,24 +21,21 @@ export class KmAnalisisService {
   }
 
   create(createKmAnalisiDto: CreateKmAnalisiDto) {
-    console.log(createKmAnalisiDto)
-    return 'This action adds a new kmAnalisi';
+    const data = this.kmAnalisisRepository.create(createKmAnalisiDto)
+    return this.kmAnalisisRepository.save(data)
   }
 
   findAll() {
-    return `This action returns all kmAnalisis`;
+    return this.kmAnalisisRepository.find()
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} kmAnalisi`;
+    return this.kmAnalisisRepository.findBy({ id })
   }
 
   update(id: number, updateKmAnalisiDto: UpdateKmAnalisiDto) {
-    console.log(updateKmAnalisiDto)
-    return `This action updates a #${id} kmAnalisi`;
+    const update = this.kmAnalisisRepository.create(updateKmAnalisiDto)
+    return this.kmAnalisisRepository.update({ id }, update )
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} kmAnalisi`;
-  }
 }

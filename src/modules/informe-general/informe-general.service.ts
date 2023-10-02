@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateInformeGeneralDto } from './dto/create-informe-general.dto';
 import { UpdateInformeGeneralDto } from './dto/update-informe-general.dto';
+import { InformeGeneral } from './entities/informe-general.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class InformeGeneralService {
+
+  constructor(
+    @InjectRepository(InformeGeneral) private informeGeneralRepository: Repository<InformeGeneral>
+  ){}
+
   create(createInformeGeneralDto: CreateInformeGeneralDto) {
-    return 'This action adds a new informeGeneral';
+    const data = this.informeGeneralRepository.create(createInformeGeneralDto)
+    return this.informeGeneralRepository.save(data)
   }
 
   findAll() {
-    return `This action returns all informeGeneral`;
+    return this.informeGeneralRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} informeGeneral`;
+  findOne(fecha: string) {
+    return this.informeGeneralRepository.findBy({ fecha })
   }
 
-  update(id: number, updateInformeGeneralDto: UpdateInformeGeneralDto) {
-    return `This action updates a #${id} informeGeneral`;
+  update(fecha: string, updateInformeGeneralDto: UpdateInformeGeneralDto) {
+    const update = this.informeGeneralRepository.create(updateInformeGeneralDto)
+    return this.informeGeneralRepository.update({ fecha }, update)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} informeGeneral`;
+  remove(fecha: string) {
+    return this.informeGeneralRepository.delete({ fecha })
   }
 }

@@ -66,8 +66,4 @@ export class KmAnalisisController {
     return this.kmAnalisisService.update(+id, updateKmAnalisiDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.kmAnalisisService.remove(+id);
-  }
 }

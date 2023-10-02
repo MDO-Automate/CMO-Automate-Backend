@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateResumenElectricaDto } from './dto/create-resumen-electrica.dto';
 import { UpdateResumenElectricaDto } from './dto/update-resumen-electrica.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ResumenElectrica } from './entities/resumen-electrica.entity';
 
 @Injectable()
 export class ResumenElectricaService {
+  
+  constructor(
+    @InjectRepository(ResumenElectrica) private resumenElectRepository: Repository<ResumenElectrica>
+  ){}
+
   create(createResumenElectricaDto: CreateResumenElectricaDto) {
-    return 'This action adds a new resumenElectrica';
+    const data = this.resumenElectRepository.create(createResumenElectricaDto)
+    return this.resumenElectRepository.save(data)
   }
 
   findAll() {
-    return `This action returns all resumenElectrica`;
+    return this.resumenElectRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} resumenElectrica`;
+  findOne(fecha: string) {
+    return this.resumenElectRepository.findBy( { fecha })
   }
 
-  update(id: number, updateResumenElectricaDto: UpdateResumenElectricaDto) {
-    return `This action updates a #${id} resumenElectrica`;
+  update(fecha: string, updateResumenElectricaDto: UpdateResumenElectricaDto) {
+    const update = this.resumenElectRepository.create(updateResumenElectricaDto)
+    return this.resumenElectRepository.update( { fecha } ,update)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} resumenElectrica`;
+  remove(fecha: string) {
+    return this.resumenElectRepository.delete({  fecha  });
   }
 }

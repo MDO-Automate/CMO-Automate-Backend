@@ -54,21 +54,21 @@ export class KmAnalisis {
 
     @Column({ default: 0 }) km1: number
 
-    @Column({  default: 0 }) km2: number
+    @Column({ default: 0 }) km2: number
 
-    @Column({  default: 0 }) km3: number
+    @Column({ default: 0 }) km3: number
 
-    @Column({  default: 0 }) km4: number
+    @Column({ default: 0 }) km4: number
 
-    @Column({  default: false }) minor500: boolean
+    @Column({ default: false }) minor500: boolean
 
-    @Column({  default: false }) distanciaYMedia: boolean
+    @Column({ default: false }) distanciaYMedia: boolean
 
-    @Column({  default: false }) distanciaYParadas: boolean
+    @Column({ default: false }) distanciaYParadas: boolean
 
-    @Column({  default: false }) fueraHorario: boolean
+    @Column({ default: false }) fueraHorario: boolean
 
     @Column({ type: 'date' }) fecha: string
 
-    @Column() obs: string
+    @Column({ default: '' }) obs: string
 }

@@ -20,18 +20,18 @@ export class InformeGeneralController {
     return this.informeGeneralService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.informeGeneralService.findOne(+id);
+  @Get(':fecha')
+  findOne(@Param('fecha') fecha: string) {
+    return this.informeGeneralService.findOne(fecha);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateInformeGeneralDto: UpdateInformeGeneralDto) {
-    return this.informeGeneralService.update(+id, updateInformeGeneralDto);
+  @Patch(':fecha')
+  update(@Param('fecha') fecha: string, @Body() updateInformeGeneralDto: UpdateInformeGeneralDto) {
+    return this.informeGeneralService.update(fecha, updateInformeGeneralDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.informeGeneralService.remove(+id);
+  @Delete(':fecha')
+  remove(@Param('fecha') fecha: string) {
+    return this.informeGeneralService.remove(fecha);
   }
 }

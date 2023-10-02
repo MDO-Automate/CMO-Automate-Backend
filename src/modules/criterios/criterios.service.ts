@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCriterioDto } from './dto/create-criterio.dto';
 import { UpdateCriterioDto } from './dto/update-criterio.dto';
+import { Criterio } from './entities/criterio.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CriteriosService {
+
+  constructor(
+    @InjectRepository(Criterio) private criterioRepository: Repository<Criterio>
+  ){}
+
   create(createCriterioDto: CreateCriterioDto) {
-    return 'This action adds a new criterio';
+    const data = this.criterioRepository.create(createCriterioDto)
+    return this.criterioRepository.save(data)
   }
 
   findAll() {
-    return `This action returns all criterios`;
+    return this.criterioRepository.find()
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} criterio`;
+    return this.criterioRepository.findBy({ id })
   }
 
   update(id: number, updateCriterioDto: UpdateCriterioDto) {
-    return `This action updates a #${id} criterio`;
+    const update = this.criterioRepository.create(updateCriterioDto)
+    return this.criterioRepository.update({ id }, update)
   }
 
   remove(id: number) {
-    return `This action removes a #${id} criterio`;
+    return this.criterioRepository.delete({ id })
   }
 }

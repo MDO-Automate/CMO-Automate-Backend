@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateItinerarioDto } from './dto/create-itinerario.dto';
 import { UpdateItinerarioDto } from './dto/update-itinerario.dto';
+import { Itinerario } from './entities/itinerario.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ItinerariosService {
+
+  constructor(
+    @InjectRepository(Itinerario) private itinerarioRepository: Repository<Itinerario>
+  ){}
+ 
   create(createItinerarioDto: CreateItinerarioDto) {
-    return 'This action adds a new itinerario';
+    const data = this.itinerarioRepository.create(createItinerarioDto)
+    return this.itinerarioRepository.save(data)
   }
 
   findAll() {
-    return `This action returns all itinerarios`;
+    return this.itinerarioRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} itinerario`;
+    return  this.itinerarioRepository.findBy({ id });
   }
 
   update(id: number, updateItinerarioDto: UpdateItinerarioDto) {
-    return `This action updates a #${id} itinerario`;
+    const update = this.itinerarioRepository.create(updateItinerarioDto)
+    return this.itinerarioRepository.update( { id } , update)
   }
 
   remove(id: number) {
-    return `This action removes a #${id} itinerario`;
+    return this.itinerarioRepository.delete({ id })
   }
 }
