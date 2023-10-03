@@ -83,6 +83,12 @@ export class KmAnalisisService {
 
     if(criterio){
        const response = await this.criteriosService.findOne(criterio)
+       if(response.length < 1){
+        throw new 
+          BadRequestException(
+            'No se encontró el criterio seleccionado.'
+          )
+       }
        const criterioName = response[0].campo
 
        const criterioKey =  JSON.parse(`{ "${criterioName}": true }`)
