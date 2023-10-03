@@ -7,17 +7,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { KmAnalisis } from './entities/km-analisis.entity';
 import { RutasModule } from '../rutas/rutas.module';
 import { RutasDetailsService } from '../rutas/rutas-details.service';
+import { CriteriosService } from '../criterios/criterios.service';
+import { Criterio } from '../criterios/entities/criterio.entity';
 
 @Module({
   imports: [ 
-    TypeOrmModule.forFeature([ KmAnalisis ]),
+    TypeOrmModule.forFeature([ KmAnalisis, Criterio ]),
     RutasModule 
   ],
   controllers: [KmAnalisisController],
   providers: [
     KmAnalisisService, 
     KmProcessFileService,
-    RutasDetailsService
+    RutasDetailsService,
+    CriteriosService
   ],
 })
 export class KmAnalisisModule {}

@@ -5,4 +5,6 @@ export class Criterio {
     @PrimaryGeneratedColumn() id: number
 
     @Column() nombre: string
+
+    @Column() campo: string
 }

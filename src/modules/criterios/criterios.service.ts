@@ -21,8 +21,8 @@ export class CriteriosService {
     return this.criterioRepository.find()
   }
 
-  findOne(id: number) {
-    return this.criterioRepository.findBy({ id })
+  async findOne(id: number) {
+    return await this.criterioRepository.findBy({ id })
   }
 
   update(id: number, updateCriterioDto: UpdateCriterioDto) {
