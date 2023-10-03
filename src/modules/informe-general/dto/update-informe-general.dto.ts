@@ -1,11 +1,9 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateInformeGeneralDto } from './create-informe-general.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 import { Ruta } from 'src/modules/rutas/entities/ruta.entity';
 
 export class UpdateInformeGeneralDto {
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     @IsNumber()
     linea: Ruta
 

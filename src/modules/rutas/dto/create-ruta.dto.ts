@@ -40,19 +40,19 @@ export class CreateRutaDto {
     @IsNumber()
     kmItinerarioRepro4: number
 
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     @IsNumber()
     itinerario1: Itinerario
 
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     @IsNumber()
     itinerario2: Itinerario
 
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     @IsNumber()
     itinerario3: Itinerario
 
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     @IsNumber()
     itinerario4: Itinerario
 

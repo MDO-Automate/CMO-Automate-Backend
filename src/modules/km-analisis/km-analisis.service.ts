@@ -90,14 +90,11 @@ export class KmAnalisisService {
           )
        }
        const criterioName = response[0].campo
-
        const criterioKey =  JSON.parse(`{ "${criterioName}": true }`)
-
        whereOptions = {
         ...whereOptions,
         ...criterioKey
       }
-
     }
     
     return this.kmAnalisisRepository.find({ where: whereOptions })

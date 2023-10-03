@@ -1,13 +1,13 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { IsDate, IsNumber, IsString } from "class-validator"
-import { Ruta } from "src/modules/rutas/entities/ruta.entity"
+import { ApiProperty } from '@nestjs/swagger'
+import { IsDate, IsNumber, IsString } from 'class-validator'
+import { Ruta } from 'src/modules/rutas/entities/ruta.entity'
 
 export class CreateResumenElectricaDto {
     @ApiProperty()
     @IsDate()
     fecha: string
 
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     @IsNumber()
     linea: Ruta
 

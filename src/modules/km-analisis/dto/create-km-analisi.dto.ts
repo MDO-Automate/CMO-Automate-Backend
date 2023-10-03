@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator"
-import { Itinerario } from "src/modules/itinerarios/entities/itinerario.entity"
-import { Ruta } from "src/modules/rutas/entities/ruta.entity"
+import { ApiProperty } from '@nestjs/swagger'
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
+import { Itinerario } from 'src/modules/itinerarios/entities/itinerario.entity'
+import { Ruta } from 'src/modules/rutas/entities/ruta.entity'
 
 export class CreateKmAnalisiDto {
 
@@ -21,13 +21,11 @@ export class CreateKmAnalisiDto {
     @IsString()
     empleado: string
 
-    @ApiProperty()
-    
+    @ApiProperty({ type: 'number' })
     @IsNumber()
     linea: Ruta
 
-    @ApiProperty()
-    
+    @ApiProperty({ type: 'number' }) 
     @IsNumber()
     itinerario: Itinerario
 
@@ -56,8 +54,7 @@ export class CreateKmAnalisiDto {
     @IsNumber()
     distancia: number
 
-    @ApiProperty()
-    
+    @ApiProperty()  
     @IsNumber()
     retraso: number
 
@@ -78,12 +75,10 @@ export class CreateKmAnalisiDto {
     tiempoEfectivo: string
 
     @ApiProperty()
-    
     @IsNumber()
     retrasoE: number
 
     @ApiProperty()
-    
     @IsNumber() 
     pmr: number
     
