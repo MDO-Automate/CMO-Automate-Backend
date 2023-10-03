@@ -8,10 +8,11 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
-  HttpCode
+  HttpCode,
+  Query
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger'
 
 import { KmAnalisisService } from './km-analisis.service'
 import { CreateKmAnalisiDto } from './dto/create-km-analisi.dto'
@@ -54,9 +55,14 @@ export class KmAnalisisController {
     return this.kmAnalisisService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.kmAnalisisService.findOne(+id);
+  @Get('/filter')
+  @ApiQuery({ name: 'kmInicial' })
+  @ApiQuery({ name: 'kmFinal' })
+  @ApiQuery({ name: 'itinerario' })
+  @ApiQuery({ name: 'fecha' })
+  @ApiQuery({ name: 'ruta' })
+  multiFilter(@Query() params: string) {
+    return this.kmAnalisisService.multiFilter(params)
   }
 
   @Patch(':id')

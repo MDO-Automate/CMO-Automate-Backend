@@ -20,6 +20,15 @@ export const getFormatDate = (date: string) =>{
     return newDate
 } 
 
+export const getFormatStringDate = (date: string) =>{
+    const day = date.split('/')[0]
+    const month = date.split('/')[1]
+    const year = date.split('/')[2]
+    const newDate = `${year}-${month}-${day}`
+    return newDate
+} 
+
+
 export const getFormatHours = (hourString: string)=>{
     const hourSplit = hourString.split(':')
     const hour = hourSplit[0].padStart(2, '0')
