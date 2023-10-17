@@ -83,24 +83,28 @@ export class RutasDetailsService {
     }
 
     async getSchedulesByRoutAndDate(route: string, date: string){
-      const routeDetails = await this.getRouteDetails(route)
-      const typeDay = getDayType(getFormatDate(date))
-      
-      const schedules = {
-        habil: {
-          startRoute: routeDetails.inicioHabil,
-          endRoute: routeDetails.finHabil
-        },
-        saturday: {
-          startRoute: routeDetails.inicioSabado,
-          endRoute: routeDetails.finSabado
-        },
-        sunday: {
-          startRoute: routeDetails.inicioDomingo,
-          endRoute: routeDetails.finDomingo
+      try {
+        const routeDetails = await this.getRouteDetails(route)
+        const typeDay = getDayType(getFormatDate(date))
+        
+        const schedules = {
+          habil: {
+            startRoute: routeDetails.inicioHabil,
+            endRoute: routeDetails.finHabil
+          },
+          saturday: {
+            startRoute: routeDetails.inicioSabado,
+            endRoute: routeDetails.finSabado
+          },
+          sunday: {
+            startRoute: routeDetails.inicioDomingo,
+            endRoute: routeDetails.finDomingo
+          }
         }
+        return schedules[`${typeDay}`]
       }
-
-      return schedules[`${typeDay}`]
+      catch {
+        return null
+      }
     }
 }

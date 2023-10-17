@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as xlsx from 'xlsx';
 
 import { KmAnalisis } from './entities/km-analisis.entity';
@@ -19,24 +19,37 @@ export class KmProcessFileService {
     const workbook = xlsx.read(file.buffer, { type: 'buffer' })
     const sheetName = workbook.SheetNames[0]
     const sheet = workbook.Sheets[sheetName]
-    const dataJson = xlsx.utils.sheet_to_json(sheet)
+    const dataJson = xlsx.utils.sheet_to_json(sheet) //convierte la información del excel a json
     return getDataKm(dataJson)
   }
 
   async averageRound(data: KmAnalisis[]) {
     const routeName = data[0].linea
-    const newData = await this.getValidateData(data, `${routeName}`)
+    const newData = await this.getValidatedData(data, `${routeName}`)
     return newData;
   }
 
- async getValidateData(data: KmAnalisis[], routeName: string){
-    const minDistance = 500
+ async getValidatedData(data: KmAnalisis[], routeName: string){
     const date = data[0].inicioServicio.split(' ')[0]
-    const { startRoute } = await this.routeDetailsService.getSchedulesByRoutAndDate(
+    const schedulesRoute = await this.routeDetailsService.getSchedulesByRoutAndDate(
       `${routeName}`,
       date,
     )
-  
+
+    if(!schedulesRoute){
+      throw new 
+        BadRequestException(
+          `No se encontró información referente a la ruta ${routeName} para redondear a la media, 
+          verifique que la información de la ruta se encuentre cargada.`
+        )
+    }
+    return await this.validateData(data, routeName, schedulesRoute)
+  }
+
+  async validateData(data: KmAnalisis[], routeName:string, schedulesRoute: any){
+    const minDistance = 500
+    const { startRoute } = schedulesRoute
+
     return await Promise.all(
       data.map(async (item) => {
         const porcParada = parseInt(item.porcParada)
@@ -84,6 +97,4 @@ export class KmProcessFileService {
       })
     )
   }
-
-  
 }
