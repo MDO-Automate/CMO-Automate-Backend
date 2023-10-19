@@ -25,6 +25,10 @@ export class ItinerariosService {
     return  this.itinerarioRepository.findBy({ id });
   }
 
+  findOneByName(nombre: string) {
+    return  this.itinerarioRepository.findBy({ nombre });
+  }
+
   update(id: number, updateItinerarioDto: UpdateItinerarioDto) {
     const update = this.itinerarioRepository.create(updateItinerarioDto)
     return this.itinerarioRepository.update( { id } , update)

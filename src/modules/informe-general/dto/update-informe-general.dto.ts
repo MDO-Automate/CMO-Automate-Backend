@@ -25,15 +25,15 @@ export class UpdateInformeGeneralDto {
 
     @ApiProperty()
     @IsNumber()
-    totalConElect: number
-
-    @ApiProperty()
-    @IsNumber()
     datos: number
 
     @ApiProperty()
     @IsNumber()
     total: number
+
+    @ApiProperty()
+    @IsNumber()
+    totalT: number
 
     @ApiProperty()
     @IsNumber()

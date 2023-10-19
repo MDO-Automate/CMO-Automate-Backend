@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@models/*": ["src/core/models/*"],
+      "@modules/*": ["src/modules/*"],
+      "@utils/*": ["src/utils/*"],
+      "@config/*": ["src/config/*"],
+    },
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,

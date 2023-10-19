@@ -9,18 +9,24 @@ import { RutasModule } from '../rutas/rutas.module';
 import { RutasDetailsService } from '../rutas/rutas-details.service';
 import { CriteriosService } from '../criterios/criterios.service';
 import { Criterio } from '../criterios/entities/criterio.entity';
+import { RutasService } from '@modules/rutas/rutas.service';
+import { ItinerariosService } from '@modules/itinerarios/itinerarios.service';
+import { ItinerariosModule } from '@modules/itinerarios/itinerarios.module';
 
 @Module({
   imports: [ 
     TypeOrmModule.forFeature([ KmAnalisis, Criterio ]),
-    RutasModule 
+    RutasModule,
+    ItinerariosModule
   ],
   controllers: [KmAnalisisController],
   providers: [
     KmAnalisisService, 
     KmProcessFileService,
     RutasDetailsService,
-    CriteriosService
+    RutasService,
+    ItinerariosService,
+    CriteriosService,
   ],
 })
 export class KmAnalisisModule {}

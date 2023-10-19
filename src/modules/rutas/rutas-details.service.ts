@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { getAaverageRoute } from 'src/utils/getAverageRoute';
-import { Ruta } from './entities/ruta.entity';
-import { Repository } from 'typeorm';
-import { getDayType, getFormatDate } from 'src/utils/date';
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+
+import { getAaverageRoute } from '@utils/getAverageRoute'
+import { getDayType, getFormatDate } from '@utils/date'
+
+import { Ruta } from './entities/ruta.entity'
 
 @Injectable()
 export class RutasDetailsService {
@@ -20,7 +22,7 @@ export class RutasDetailsService {
           .innerJoinAndSelect('r.itinerario3', 'i3',  'i3.id = r.itinerario3')
           .innerJoinAndSelect('r.itinerario4', 'i4',  'i4.id = r.itinerario4')
           .getMany();
-      
+
         const currentRoute = routeDetails.find((item) => item.nombre == route)
         if(!currentRoute) return
     

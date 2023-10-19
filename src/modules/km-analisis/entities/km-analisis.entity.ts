@@ -59,6 +59,8 @@ export class KmAnalisis {
     @Column({ default: 0 }) km3: number
 
     @Column({ default: 0 }) km4: number
+    
+    @Column({ default: 0 }) media: number
 
     @Column({ default: false }) minor500: boolean
 

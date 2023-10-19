@@ -7,8 +7,8 @@ export class CreateInformeGeneralDto {
     @IsString()
     fecha: string
 
-    @ApiProperty({ type: 'number' })
-    @IsNumber()
+    @ApiProperty({ type: 'string' })
+    @IsString()
     linea: Ruta
 
     @ApiProperty()
@@ -29,15 +29,15 @@ export class CreateInformeGeneralDto {
 
     @ApiProperty()
     @IsNumber()
-    totalConElect: number
-
-    @ApiProperty()
-    @IsNumber()
     datos: number
 
     @ApiProperty()
     @IsNumber()
     total: number
+
+    @ApiProperty()
+    @IsNumber()
+    totalT: number
 
     @ApiProperty()
     @IsNumber()

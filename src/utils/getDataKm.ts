@@ -1,4 +1,7 @@
-export const getDataKm = (data: any) => {
+import { KmAnalisis } from '@models/kmAnalisis'
+
+
+export const getDataKm = (data: any): KmAnalisis[] => {
    return data.map((item: any, index ) => {
         if(index > 1) {
           return {
@@ -27,4 +30,23 @@ export const getDataKm = (data: any) => {
           }
         }
       }).filter(item => item != null) 
+}
+
+export const getDataKmByVeh = (data: KmAnalisis[], vehicle: string)=>{
+  const contador = data.reduce((acumulator, item )=>  {
+    if(item.vehiculo == vehicle){ 
+      if(item.km1)  return acumulator + item.km1
+      if(item.km2)  return acumulator + item.km2
+      if(item.km3)  return acumulator + item.km3
+      if(item.km4)  return acumulator + item.km4
+    }
+    return acumulator
+  }, 0 )
+
+  return contador
+}
+
+export const getDataKmByItinerary = (data: KmAnalisis[], itinerary: string)=>{
+  const contador = data.reduce((acu, item) =>  (item[itinerary]|| 0) + acu, 0)
+  return contador / 1000
 }

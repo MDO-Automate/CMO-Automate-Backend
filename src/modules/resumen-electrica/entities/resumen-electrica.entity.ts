@@ -1,15 +1,12 @@
 import { Ruta } from 'src/modules/rutas/entities/ruta.entity';
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
+@Entity()
 export class ResumenElectrica {
-    @PrimaryGeneratedColumn() fecha: string
+    @PrimaryColumn({type: 'date'}) fecha: string
 
     @ManyToOne(()=> Ruta, ruta => ruta.id)
     @JoinColumn() linea: Ruta
-
-    @Column() calendario: string
-
-    @Column() dia: string
 
     @Column() mdo109: number
 
@@ -19,6 +16,8 @@ export class ResumenElectrica {
 
     @Column() mdo112: number
 
-    @Column() total: number
+    @Column('double precision', { precision: 53 }) totalM: number
+    
+    @Column('double precision', { precision: 53 }) totalKm: number
 
 }

@@ -47,7 +47,7 @@ export class KmAnalisisController {
 
   @Post()
   create(@Body() createKmAnalisiDto: CreateKmAnalisiDto) {
-    return this.kmAnalisisService.create(createKmAnalisiDto);
+    return this.kmAnalisisService.create(createKmAnalisiDto)
   }
 
   @Get()

@@ -3,11 +3,19 @@ import { InformeGeneralService } from './informe-general.service';
 import { InformeGeneralController } from './informe-general.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InformeGeneral } from './entities/informe-general.entity';
+import { RutasService } from '@modules/rutas/rutas.service';
+import { RutasModule } from '@modules/rutas/rutas.module';
 
 @Module({
   controllers: [InformeGeneralController],
-  providers: [InformeGeneralService],
-  imports: [ TypeOrmModule.forFeature([InformeGeneral]) ],
+  providers: [
+    InformeGeneralService,
+    RutasService,
+  ],
+  imports: [ 
+    TypeOrmModule.forFeature([InformeGeneral]),
+    RutasModule
+  ],
   exports: [ TypeOrmModule ],
 })
 export class InformeGeneralModule {}

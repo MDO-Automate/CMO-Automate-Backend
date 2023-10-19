@@ -6,8 +6,11 @@ import { KmAnalisis } from './entities/km-analisis.entity';
 import { CreateKmAnalisiDto } from './dto/create-km-analisi.dto';
 import { UpdateKmAnalisiDto } from './dto/update-km-analisi.dto';
 import { KmProcessFileService } from './km-processfile.service';
-import { getFormatStringDate } from 'src/utils/date';
+import { getFormatDatatime, getFormatStringDate } from 'src/utils/date';
 import { CriteriosService } from '../criterios/criterios.service';
+import { RutasService } from '@modules/rutas/rutas.service';
+import { ItinerariosService } from '@modules/itinerarios/itinerarios.service';
+
 
 @Injectable()
 export class KmAnalisisService {
@@ -15,6 +18,8 @@ export class KmAnalisisService {
   constructor(
     private processFileService: KmProcessFileService,
     private criteriosService: CriteriosService,
+    private itinerariesService: ItinerariosService,
+    private rutaService: RutasService,
     @InjectRepository(KmAnalisis) private kmAnalisisRepository: Repository<KmAnalisis>,
   ){}
 
@@ -23,13 +28,39 @@ export class KmAnalisisService {
     return {
       statusCode: 200,
       describe : 'Archivo procesado correctamente.', 
-      processedData 
+      data: processedData
     } 
   }
 
-  create(createKmAnalisiDto: CreateKmAnalisiDto) {
-    const data = this.kmAnalisisRepository.create(createKmAnalisiDto)
-    return this.kmAnalisisRepository.save(data)
+  async create(createKmAnalisiDto: CreateKmAnalisiDto) {
+    try{
+      const created = await Promise.all(createKmAnalisiDto.data.map(async(item) => {
+        const line = await this.rutaService.findOneByName(`${item.linea}`)
+        const itinerary = await this.itinerariesService.findOneByName(`${item.itinerario}`)
+        item = {
+          ...item,
+          fecha: getFormatStringDate(item.fecha),
+          inicioServicio: getFormatDatatime(item.inicioServicio),
+          finServicio: getFormatDatatime(item.finServicio),
+          inicioServicioEfectivo:  getFormatDatatime(item.inicioServicioEfectivo),
+          finServicioEfectivo:  getFormatDatatime(item.inicioServicioEfectivo),
+          linea: line[0],
+          itinerario: itinerary[0]
+        }
+        const data = this.kmAnalisisRepository.create(item)
+        return await this.kmAnalisisRepository.save(data)
+      }))
+
+      return created
+    }
+    catch(e){
+      if(e.serverName) {
+        throw new BadRequestException(
+          'Se ha producido un error en el origen de los datos, por favor intente más tarde. Si el error persiste comuniquese con la persona encarga del soporte del aplicativo.',
+          'Base de datos'
+        )
+      }
+    }
   }
 
   findAll() {
@@ -49,7 +80,7 @@ export class KmAnalisisService {
     if(!ruta) {
       throw new 
         BadRequestException(
-          'No se encontró  query de ruta filtrar.',
+          'No se encontró query de ruta filtrar.',
           'Campo requerido'
         )
     }

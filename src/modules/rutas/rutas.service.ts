@@ -25,6 +25,10 @@ export class RutasService {
     return this.rutasRepository.findBy({ id })
   }
 
+  findOneByName(nombre: string) {
+    return this.rutasRepository.findBy({ nombre })
+  }
+
   update(id: number, updateRutaDto: UpdateRutaDto) {
     const update = this.rutasRepository.create(updateRutaDto)
     return this.rutasRepository.update( { id },  update)

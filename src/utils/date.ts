@@ -21,12 +21,25 @@ export const getFormatDate = (date: string) =>{
 } 
 
 export const getFormatStringDate = (date: string) =>{
+    if(date.includes('-')) return date
     const day = date.split('/')[0]
     const month = date.split('/')[1]
     const year = date.split('/')[2]
     const newDate = `${year}-${month}-${day}`
     return newDate
 } 
+
+export const getFormatDatatime = (datetime) =>{
+    if(datetime.includes('-')) return datetime
+    const dateTimeSplit = datetime.split(' ')
+    const date = dateTimeSplit[0]
+    const hours = getFormatHours(dateTimeSplit[1])
+    const day = date.split('/')[0]
+    const month = date.split('/')[1]
+    const year = date.split('/')[2]
+    const newDate = `${year}-${month}-${day} ${hours}`
+    return newDate
+}
 
 
 export const getFormatHours = (hourString: string)=>{

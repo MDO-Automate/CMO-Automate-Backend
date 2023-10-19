@@ -4,17 +4,24 @@ import { UpdateInformeGeneralDto } from './dto/update-informe-general.dto';
 import { InformeGeneral } from './entities/informe-general.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RutasService } from '@modules/rutas/rutas.service';
 
 @Injectable()
 export class InformeGeneralService {
 
   constructor(
+    private rutaService: RutasService,
     @InjectRepository(InformeGeneral) private informeGeneralRepository: Repository<InformeGeneral>
   ){}
 
-  create(createInformeGeneralDto: CreateInformeGeneralDto) {
+  async create(createInformeGeneralDto: CreateInformeGeneralDto) {
     const data = this.informeGeneralRepository.create(createInformeGeneralDto)
-    return this.informeGeneralRepository.save(data)
+    const line = await this.rutaService.findOneByName(`${data.linea}`)
+    const dataSave = {
+      ...data,
+      linea: line[0]
+    }
+    return this.informeGeneralRepository.save(dataSave)
   }
 
   findAll() {

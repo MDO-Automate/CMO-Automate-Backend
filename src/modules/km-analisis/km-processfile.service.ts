@@ -1,19 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import * as xlsx from 'xlsx';
+import { BadRequestException, Injectable } from '@nestjs/common'
+import * as xlsx from 'xlsx'
 
-import { KmAnalisis } from './entities/km-analisis.entity';
-import { getDataKm } from 'src/utils/getDataKM';
-import { RutasDetailsService } from '../rutas/rutas-details.service';
-import { getFormatHours } from 'src/utils/date';
+import { KmAnalisis }     from '@models/kmAnalisis'
+import { getDataKm, getDataKmByItinerary, getDataKmByVeh }      from '@utils/getDataKm'
+import { getFormatHours } from '@utils/date'
+
+import { RutasDetailsService } from '../rutas/rutas-details.service'
+import { ResumenElectrica } from '@models/resumenElectrica'
+
 
 @Injectable()
 export class KmProcessFileService {
   constructor(private routeDetailsService: RutasDetailsService) {}
-
-  async getProcessedData(file: any) {
-    const data: KmAnalisis[] = this.getDataFromFile(file)
-    return await this.averageRound(data)
-  }
 
   getDataFromFile(file: any) {
     const workbook = xlsx.read(file.buffer, { type: 'buffer' })
@@ -21,6 +19,21 @@ export class KmProcessFileService {
     const sheet = workbook.Sheets[sheetName]
     const dataJson = xlsx.utils.sheet_to_json(sheet) //convierte la información del excel a json
     return getDataKm(dataJson)
+  }
+
+  async getProcessedData(file: any) {
+    const data: KmAnalisis[] = this.getDataFromFile(file)
+    const averageRoundData = await this.averageRound(data)
+    const averageRoundDataSort = averageRoundData.sort((a, b) => a.distancia - b.distancia)
+    const summaryElectricData = this.summaryElectric(averageRoundData)
+
+   const generalSummary = this.generalSummary(averageRoundData,summaryElectricData)
+   
+    return {
+      analisisKm : averageRoundDataSort,
+      resumenElec: [summaryElectricData],
+      resumenGeneral: [generalSummary]
+    }
   }
 
   async averageRound(data: KmAnalisis[]) {
@@ -35,7 +48,7 @@ export class KmProcessFileService {
       `${routeName}`,
       date,
     )
-
+    
     if(!schedulesRoute){
       throw new 
         BadRequestException(
@@ -48,6 +61,7 @@ export class KmProcessFileService {
 
   async validateData(data: KmAnalisis[], routeName:string, schedulesRoute: any){
     const minDistance = 500
+    const overDistance = 200
     const { startRoute } = schedulesRoute
 
     return await Promise.all(
@@ -57,7 +71,7 @@ export class KmProcessFileService {
         const { name, media } = await this.routeDetailsService.getItineraryDistance(`${routeName}`,`${item.itinerario}`)
 
         let kmDistance = parseInt(`${item.distancia}`)
-      
+  
         //Validación de criterios
         if (kmDistance > 0 && porcParada < 5) {
           kmDistance = 0
@@ -73,6 +87,9 @@ export class KmProcessFileService {
             minor500: true 
           }
         }
+        if(kmDistance > media && kmDistance < (media + overDistance)){
+          kmDistance = media
+        }
         if (kmDistance < media && porcParada > 99) {   
           kmDistance = media
           item = { 
@@ -86,6 +103,7 @@ export class KmProcessFileService {
             fueraHorario: true 
           }
         }
+        item = { ...item, media  }
 
         //le asigna km1, km2, km3... dependiendo del itinerario.
         const kmItinerary = JSON.parse(`{ "${name}": ${ kmDistance } }`)
@@ -97,4 +115,58 @@ export class KmProcessFileService {
       })
     )
   }
+
+  summaryElectric(data: KmAnalisis[]): ResumenElectrica{
+    const vehicles = {
+      mdo109: getDataKmByVeh(data, 'MDO-109'),
+      mdo110: getDataKmByVeh(data, 'MDO-110'),
+      mdo111: getDataKmByVeh(data, 'MDO-111'),
+      mdo112: getDataKmByVeh(data, 'MDO-112')
+    }
+    const total = Object.keys(vehicles).reduce(
+      (acumulator, item) =>  vehicles[item] + acumulator, 
+      0
+    )
+    return({
+      fecha: data[0].fecha,
+      linea: data[0].linea,
+      ...vehicles,
+      totalM: total,
+      totalKm: total / 1000
+    })
+  }
+
+  generalSummary(data: KmAnalisis[], kmElectric: ResumenElectrica){
+    const fecha = data[0].fecha
+    const linea = data[0].linea
+    const itineraries = {
+      itinerario1: getDataKmByItinerary(data, 'km1'),
+      itinerario2: getDataKmByItinerary(data, 'km2'),
+      itinerario3: getDataKmByItinerary(data, 'km3'),
+      itinerario4: getDataKmByItinerary(data, 'km4')
+    }
+
+    const total = Object.keys(itineraries).reduce(
+      (acumulator, item) =>  itineraries[item] + acumulator, 
+      0
+    )
+
+    const totalT = data.reduce((acu, item) => +item.distancia + acu, 0)
+    const flotaElect = kmElectric.totalKm
+    const totalSinElect = total - flotaElect
+
+    return({
+      fecha,
+      linea,
+      ...itineraries,
+      total,
+      datos: data.length,
+      totalT,
+      flotaElect,
+      totalSinElect
+    });
+  }
+
 }
+
+

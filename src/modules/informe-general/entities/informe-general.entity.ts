@@ -1,28 +1,28 @@
 import { Ruta } from 'src/modules/rutas/entities/ruta.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class InformeGeneral {
-    @PrimaryGeneratedColumn() fecha: string
+    @PrimaryColumn() fecha: string
 
     @ManyToOne(()=> Ruta, ruta => ruta.id)
     @JoinColumn() linea: Ruta
 
-    @Column() itinerario1: number
+    @Column('double precision', { precision: 53 }) itinerario1: number
 
-    @Column() itinerario2: number
+    @Column('double precision', { precision: 53 }) itinerario2: number
     
-    @Column() itinerario3: number
+    @Column('double precision', { precision: 53 }) itinerario3: number
 
-    @Column() itinerario4: number
-
-    @Column() totalConElect: number
+    @Column('double precision', { precision: 53 }) itinerario4: number
 
     @Column() datos: number
 
-    @Column() total: number
+    @Column('double precision', { precision: 53 }) total: number
 
-    @Column() flotaElect: number
+    @Column('double precision', { precision: 53 }) totalT: number
+    
+    @Column('double precision', { precision: 53 }) flotaElect: number
 
-    @Column() totalSinElect: number
+    @Column('double precision', { precision: 53 }) totalSinElect: number
 }

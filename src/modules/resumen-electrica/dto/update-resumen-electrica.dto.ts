@@ -1,20 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { IsNumber, IsString } from "class-validator"
-import { Ruta } from "src/modules/rutas/entities/ruta.entity"
+import { ApiProperty } from '@nestjs/swagger'
+import { IsNumber } from 'class-validator'
+import { Ruta } from 'src/modules/rutas/entities/ruta.entity'
 
 export class UpdateResumenElectricaDto {
 
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     @IsNumber()
     linea: Ruta
-
-    @ApiProperty()
-    @IsString()
-    calendario: string
-
-    @ApiProperty()
-    @IsString()
-    dia: string
 
     @ApiProperty()
     @IsNumber()
@@ -34,5 +26,9 @@ export class UpdateResumenElectricaDto {
 
     @ApiProperty()
     @IsNumber()
-    total: number
+    totalKm: number
+
+    @ApiProperty()
+    @IsNumber()
+    totalM: number
 }
