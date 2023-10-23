@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Criterio } from 'src/modules/criterios/entities/criterio.entity';
-import { InformeGeneral } from 'src/modules/informe-general/entities/informe-general.entity';
-import { Itinerario } from 'src/modules/itinerarios/entities/itinerario.entity';
-import { KmAnalisis } from 'src/modules/km-analisis/entities/km-analisis.entity';
-import { Prueba } from 'src/modules/prueba/entities/prueba.entity';
-import { ResumenElectrica } from 'src/modules/resumen-electrica/entities/resumen-electrica.entity';
-import { Ruta } from 'src/modules/rutas/entities/ruta.entity';
+import { Criterio } from '@modules/kilometers/modules/criterios/entities/criterio.entity';
+import { InformeGeneral } from '@modules/kilometers/modules/informe-general/entities/informe-general.entity';
+import { Itinerario } from '@modules/kilometers/modules/itinerarios/entities/itinerario.entity';
+import { KmAnalisis } from '@modules/kilometers/modules/km-analisis/entities/km-analisis.entity';
+import { ResumenElectrica } from '@modules/kilometers/modules/resumen-electrica/entities/resumen-electrica.entity';
+import { Ruta } from '@modules/kilometers/modules/rutas/entities/ruta.entity';
 
 @Module({
   imports: [
@@ -20,7 +19,6 @@ import { Ruta } from 'src/modules/rutas/entities/ruta.entity';
       synchronize: true,
       options: { encrypt: false },
       entities: [
-        Prueba,
         Criterio,
         Itinerario,
         Ruta,
