@@ -24,7 +24,7 @@ export class KmProcessFileService {
   async getProcessedData(file: any) {
     const data: KmAnalisis[] = this.getDataFromFile(file)
     const averageRoundData = await this.averageRound(data)
-    const averageRoundDataSort = averageRoundData.sort((a, b) => a.distancia - b.distancia)
+    const averageRoundDataSort = averageRoundData.sort((a, b) => b.distancia - a.distancia)
     const summaryElectricData = this.summaryElectric(averageRoundData)
 
    const generalSummary = this.generalSummary(averageRoundData,summaryElectricData)
