@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { InformeGeneralService } from './informe-general.service';
 import { CreateInformeGeneralDto } from './dto/create-informe-general.dto';
-import { UpdateInformeGeneralDto } from './dto/update-informe-general.dto';
+import { UpdateGeralDataDtoArray } from './dto/update-general-data.dto';
 
 @ApiTags('Informe general')
 @Controller('informe-general')
@@ -16,18 +16,15 @@ export class InformeGeneralController {
   }
 
   @Get()
-  findAll() {
-    return this.informeGeneralService.findAll();
+  @ApiQuery({ name: 'fecha' })
+  @ApiQuery({ name: 'ruta' })
+  findDateAndRoute(@Query('fecha') fecha: string, @Query('ruta') ruta: string) {
+    return this.informeGeneralService.findByMonthAndRoute(fecha, ruta);
   }
 
-  @Get(':fecha')
-  findOne(@Param('fecha') fecha: string) {
-    return this.informeGeneralService.findOne(fecha);
-  }
-
-  @Patch(':fecha')
-  update(@Param('fecha') fecha: string, @Body() updateInformeGeneralDto: UpdateInformeGeneralDto) {
-    return this.informeGeneralService.update(fecha, updateInformeGeneralDto);
+  @Patch()
+  update(@Body() updateInformeGeneralDto: UpdateGeralDataDtoArray) {
+    return this.informeGeneralService.update(updateInformeGeneralDto);
   }
 
   @Delete(':fecha')

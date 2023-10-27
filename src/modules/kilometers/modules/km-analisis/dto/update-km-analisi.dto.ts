@@ -1,25 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNumber, IsString } from 'class-validator'
+import { IsArray } from 'class-validator'
+import { CreateKmAnalisiArrayDto } from './create-km-analisisArray.dto'
 
 export class UpdateKmAnalisiDto {
     
-    @ApiProperty()
-    @IsNumber()
-    km1: number
-
-    @ApiProperty()
-    @IsNumber()
-    km2: number
-
-    @ApiProperty()
-    @IsNumber()
-    km3: number
-
-    @ApiProperty()
-    @IsNumber()
-    km4: number
-
-    @ApiProperty()
-    @IsString()
-    obs: string
+    @ApiProperty({ type: [ CreateKmAnalisiArrayDto ] })
+    @IsArray()
+    data: CreateKmAnalisiArrayDto[]
 }

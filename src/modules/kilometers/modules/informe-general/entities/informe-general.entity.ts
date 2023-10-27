@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class InformeGeneral {
-    @PrimaryColumn() fecha: string
+    @PrimaryColumn({ type: 'date' }) fecha: string
 
     @ManyToOne(()=> Ruta, ruta => ruta.id)
     @JoinColumn() linea: Ruta

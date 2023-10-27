@@ -1,4 +1,4 @@
-export interface ResumenElectrica {
+export interface IResumenElectrica {
     fecha: string
     linea: number
     mdo109: number

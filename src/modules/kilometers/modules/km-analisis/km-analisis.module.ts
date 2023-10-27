@@ -12,12 +12,18 @@ import { Criterio } from '../criterios/entities/criterio.entity';
 import { RutasService } from '../rutas/rutas.service';
 import { ItinerariosService } from '../itinerarios/itinerarios.service';
 import { ItinerariosModule } from '../itinerarios/itinerarios.module';
+import { ResumenElectricaService } from '../resumen-electrica/resumen-electrica.service';
+import { ResumenElectricaModule } from '../resumen-electrica/resumen-electrica.module';
+import { InformeGeneralService } from '../informe-general/informe-general.service';
+import { InformeGeneralModule } from '../informe-general/informe-general.module';
 
 @Module({
   imports: [ 
     TypeOrmModule.forFeature([ KmAnalisis, Criterio ]),
     RutasModule,
-    ItinerariosModule
+    ItinerariosModule,
+    ResumenElectricaModule,
+    InformeGeneralModule
   ],
   controllers: [KmAnalisisController],
   providers: [
@@ -27,6 +33,8 @@ import { ItinerariosModule } from '../itinerarios/itinerarios.module';
     RutasService,
     ItinerariosService,
     CriteriosService,
+    ResumenElectricaService,
+    InformeGeneralService
   ],
 })
 export class KmAnalisisModule {}

@@ -8,6 +8,10 @@ import { UpdateResumenElectricaDto } from './dto/update-resumen-electrica.dto'
 import { ResumenElectrica } from './entities/resumen-electrica.entity'
 import { RutasService } from '../rutas/rutas.service'
 import { getFormatStringDate } from '@utils/date'
+import { getDataKmByVeh } from '@utils/getDataKm'
+import { KmAnalisis } from '@models/kmAnalisis'
+import { IResumenElectrica } from '@models/resumenElectrica'
+
 
 @Injectable()
 export class ResumenElectricaService {
@@ -16,6 +20,27 @@ export class ResumenElectricaService {
     private rutaService: RutasService,
     @InjectRepository(ResumenElectrica) private resumenElectRepository: Repository<ResumenElectrica>
   ){}
+
+  getElectricSummary(data: KmAnalisis[]): IResumenElectrica{
+    const vehicles = {
+      mdo109: getDataKmByVeh(data, 'MDO-109'),
+      mdo110: getDataKmByVeh(data, 'MDO-110'),
+      mdo111: getDataKmByVeh(data, 'MDO-111'),
+      mdo112: getDataKmByVeh(data, 'MDO-112')
+    }
+    const total = Object.keys(vehicles).reduce(
+      (acumulator, item) =>  vehicles[item] + acumulator, 
+      0
+    )
+    return({
+      fecha: data[0].fecha,
+      linea: data[0].linea,
+      ...vehicles,
+      totalM: total,
+      totalKm: total / 1000
+    })
+  }
+
 
   async create(createResumenElectricaDto: CreateResumenElectricaDto) {
     const data = this.resumenElectRepository.create(createResumenElectricaDto)

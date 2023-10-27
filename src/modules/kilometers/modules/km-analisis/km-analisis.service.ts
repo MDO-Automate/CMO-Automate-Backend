@@ -10,6 +10,7 @@ import { getFormatDatatime, getFormatStringDate } from 'src/utils/date';
 import { CriteriosService } from '../criterios/criterios.service';
 import { RutasService } from '../rutas/rutas.service';
 import { ItinerariosService } from '../itinerarios/itinerarios.service';
+import { CreateKmAnalisiArrayDto } from './dto/create-km-analisisArray.dto';
 
 
 @Injectable()
@@ -32,20 +33,28 @@ export class KmAnalisisService {
     } 
   }
 
+ async assignData(item: CreateKmAnalisiArrayDto){
+    const line = await this.rutaService.findOneByName(`${item.linea}`)
+    const itinerary = await this.itinerariesService.findOneByName(`${item.itinerario}`)
+    return item = {
+      ...item,
+      fecha: getFormatStringDate(item.fecha),
+      inicioServicio: getFormatDatatime(item.inicioServicio),
+      finServicio: getFormatDatatime(item.finServicio),
+      inicioServicioEfectivo:  getFormatDatatime(item.inicioServicioEfectivo),
+      finServicioEfectivo:  getFormatDatatime(item.inicioServicioEfectivo),
+      linea: line[0],
+      itinerario: itinerary[0]
+    }
+  }
+
   async create(createKmAnalisiDto: CreateKmAnalisiDto) {
     try{
       const created = await Promise.all(createKmAnalisiDto.data.map(async(item) => {
-        const line = await this.rutaService.findOneByName(`${item.linea}`)
-        const itinerary = await this.itinerariesService.findOneByName(`${item.itinerario}`)
+        const dataAssigned = await this.assignData(item)
         item = {
           ...item,
-          fecha: getFormatStringDate(item.fecha),
-          inicioServicio: getFormatDatatime(item.inicioServicio),
-          finServicio: getFormatDatatime(item.finServicio),
-          inicioServicioEfectivo:  getFormatDatatime(item.inicioServicioEfectivo),
-          finServicioEfectivo:  getFormatDatatime(item.inicioServicioEfectivo),
-          linea: line[0],
-          itinerario: itinerary[0]
+          ...dataAssigned
         }
         const data = this.kmAnalisisRepository.create(item)
         return await this.kmAnalisisRepository.save(data)
@@ -68,6 +77,7 @@ export class KmAnalisisService {
   }
 
   async multiFilter(filter: any){
+    console.log(filter)
     const { 
       ruta,
       fecha,
@@ -81,7 +91,7 @@ export class KmAnalisisService {
       throw new 
         BadRequestException(
           'No se encontró query de ruta filtrar.',
-          'Campo requerido'
+          'ruta'
         )
     }
 
@@ -89,7 +99,7 @@ export class KmAnalisisService {
       throw new 
         BadRequestException(
           'No se encontró query de fecha para filtrar.',
-          'Campo requerido'
+          'fecha'
         )
     }
 
@@ -127,13 +137,30 @@ export class KmAnalisisService {
         ...criterioKey
       }
     }
-    
-    return this.kmAnalisisRepository.find({ where: whereOptions })
+    return this.kmAnalisisRepository
+    .createQueryBuilder('km')
+    .innerJoinAndSelect('km.itinerario', 'i',   'i.id  = km.itinerario')
+    .innerJoinAndSelect('km.linea', 'r',  'r.id = km.linea')
+    .where(whereOptions)
+    .getMany()
+
   }
 
-  update(id: number, updateKmAnalisiDto: UpdateKmAnalisiDto) {
-    const update = this.kmAnalisisRepository.create(updateKmAnalisiDto)
-    return this.kmAnalisisRepository.update({ id }, update )
+  async update(updateKmAnalisiDto: UpdateKmAnalisiDto) {
+    const updated = updateKmAnalisiDto.data.map(async (item) => {
+      const dataAssigned = await this.assignData(item)
+      const { id } = item
+      item = {
+        ...item,
+        ...dataAssigned
+      }
+
+      delete item.id
+      const update = this.kmAnalisisRepository.create(item)
+      return this.kmAnalisisRepository.update({ id }, update )
+    })
+
+    return updated
   }
 
 }

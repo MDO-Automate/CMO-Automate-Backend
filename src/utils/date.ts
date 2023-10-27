@@ -50,3 +50,19 @@ export const getFormatHours = (hourString: string)=>{
     
     return `${hour}:${minutes}:${seconds}`
 }
+
+export const firstDayOfMonth = (date: string)=>{
+    const dateSplit = date.split('-')
+    const year = parseInt(dateSplit[0])
+    const month = parseInt(dateSplit[1])
+    const dateGenered = new Date(year, month - 1, 1)
+    return dateGenered.toJSON().split('T')[0]
+}
+
+export const lastDayOfMonth = (date: string)=>{
+    const dateSplit = date.split('-')
+    const year = parseInt(dateSplit[0])
+    const month = parseInt(dateSplit[1])
+    const dateGenered =  new Date(year, month, 0)
+    return dateGenered.toJSON().split('T')[0]
+}

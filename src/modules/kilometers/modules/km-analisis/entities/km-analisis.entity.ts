@@ -73,4 +73,6 @@ export class KmAnalisis {
     @Column({ type: 'date' }) fecha: string
 
     @Column({ default: '' }) obs: string
+
+    @Column({ default: false }) conciliado: boolean
 }

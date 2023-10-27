@@ -3,12 +3,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
 import { Itinerario } from '../../itinerarios/entities/itinerario.entity'
 
-export class CreateKmAnalisiArrayDto {
-
-    @ApiProperty()
-    @IsString()
-    @IsOptional()
-    id: number
+export class UpdateGeneralDataDto {
 
     @ApiProperty()
     @IsString()

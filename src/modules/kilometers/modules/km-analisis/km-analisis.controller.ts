@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
@@ -59,18 +58,18 @@ export class KmAnalisisController {
   @ApiQuery({ name: 'kmInicial' })
   @ApiQuery({ name: 'kmFinal' })
   @ApiQuery({ name: 'itinerario' })
+  @ApiQuery({ name: 'criterio' })
   @ApiQuery({ name: 'fecha' })
   @ApiQuery({ name: 'ruta' })
   multiFilter(@Query() params: string) {
     return this.kmAnalisisService.multiFilter(params)
   }
 
-  @Patch(':id')
+  @Patch()
   update(
-    @Param('id') id: string,
     @Body() updateKmAnalisiDto: UpdateKmAnalisiDto,
   ) {
-    return this.kmAnalisisService.update(+id, updateKmAnalisiDto);
+    return this.kmAnalisisService.update(updateKmAnalisiDto);
   }
 
 }

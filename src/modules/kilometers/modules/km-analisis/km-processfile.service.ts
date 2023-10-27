@@ -2,17 +2,22 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import * as xlsx from 'xlsx'
 
 import { KmAnalisis }     from '@models/kmAnalisis'
-import { getDataKm, getDataKmByItinerary, getDataKmByVeh }      from '@utils/getDataKm'
+import { getDataKm }      from '@utils/getDataKm'
 import { getFormatHours } from '@utils/date'
 
-import { RutasDetailsService } from '../rutas/rutas-details.service'
-import { ResumenElectrica } from '@models/resumenElectrica'
-import { getDataObjectSortDesc } from '@utils/getDataSortDesc'
+import { RutasDetailsService }      from '../rutas/rutas-details.service'
+import { getDataObjectSortDesc }    from '@utils/getDataSortDesc'
+import { ResumenElectricaService }  from '../resumen-electrica/resumen-electrica.service'
+import { InformeGeneralService } from '../informe-general/informe-general.service'
 
 
 @Injectable()
 export class KmProcessFileService {
-  constructor(private routeDetailsService: RutasDetailsService) {}
+  constructor(
+    private routeDetailsService: RutasDetailsService,
+    private resumenElectricaService: ResumenElectricaService,
+    private informeGeneralService: InformeGeneralService,
+    ) {}
 
   getDataFromFile(file: any) {
     const workbook = xlsx.read(file.buffer, { type: 'buffer' })
@@ -26,8 +31,8 @@ export class KmProcessFileService {
     const data: KmAnalisis[] = this.getDataFromFile(file)
     const averageRoundData = await this.averageRound(data)
     const averageRoundDataSort = getDataObjectSortDesc(averageRoundData, 'distancia')
-    const summaryElectricData = this.getSummaryElectric(averageRoundData)
-    const generalSummary = this.getGeneralSummary(averageRoundData,summaryElectricData)
+    const summaryElectricData = this.resumenElectricaService.getElectricSummary(averageRoundData)
+    const generalSummary = this.informeGeneralService.getGeneralSummary(averageRoundData,summaryElectricData)
    
     return {
       analisisKm : averageRoundDataSort,
@@ -114,58 +119,6 @@ export class KmProcessFileService {
         }
       })
     )
-  }
-
-  getSummaryElectric(data: KmAnalisis[]): ResumenElectrica{
-    const vehicles = {
-      mdo109: getDataKmByVeh(data, 'MDO-109'),
-      mdo110: getDataKmByVeh(data, 'MDO-110'),
-      mdo111: getDataKmByVeh(data, 'MDO-111'),
-      mdo112: getDataKmByVeh(data, 'MDO-112')
-    }
-    const total = Object.keys(vehicles).reduce(
-      (acumulator, item) =>  vehicles[item] + acumulator, 
-      0
-    )
-    return({
-      fecha: data[0].fecha,
-      linea: data[0].linea,
-      ...vehicles,
-      totalM: total,
-      totalKm: total / 1000
-    })
-  }
-
-  
-  getGeneralSummary(data: KmAnalisis[], kmElectric: ResumenElectrica){
-    const fecha = data[0].fecha
-    const linea = data[0].linea
-    const itineraries = {
-      itinerario1: getDataKmByItinerary(data, 'km1'),
-      itinerario2: getDataKmByItinerary(data, 'km2'),
-      itinerario3: getDataKmByItinerary(data, 'km3'),
-      itinerario4: getDataKmByItinerary(data, 'km4')
-    }
-
-    const total = Object.keys(itineraries).reduce(
-      (acumulator, item) =>  itineraries[item] + acumulator, 
-      0
-    )
-
-    const totalT = data.reduce((acu, item) => +item.distancia + acu, 0)
-    const flotaElect = kmElectric.totalKm
-    const totalSinElect = total - flotaElect
-
-    return({
-      fecha,
-      linea,
-      ...itineraries,
-      total,
-      datos: data.length,
-      totalT,
-      flotaElect,
-      totalSinElect
-    });
   }
 
 }
