@@ -25,4 +25,4 @@ export class HorariosIitinerario {
     @Column({ type: 'time'  })  dInicio: string
 
     @Column({ type: 'time'  }) dFin: string
-}   
+}

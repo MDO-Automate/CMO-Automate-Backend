@@ -74,9 +74,18 @@ export class KmProcessFileService {
         const porcParada = parseInt(item.porcParada)
         const start = getFormatHours(item.inicioServicioEfectivo.split(' ')[1])
         const { name, media } = await this.routeDetailsService.getItineraryDistance(`${routeName}`,`${item.itinerario}`)
-
+        const endEfectiveServiceDate = item.finServicioEfectivo.split(' ')[0]
+        const startServiceDate =  item.inicioServicio.split(' ')[0]
         let kmDistance = parseInt(`${item.distancia}`)
-  
+
+        if(endEfectiveServiceDate !== startServiceDate){
+          const hour = item.finServicioEfectivo.split(' ')[1]
+          item = {
+            ...item,
+            finServicioEfectivo: `${startServiceDate} ${hour}`
+          }
+        }
+
         //Validación de criterios
         if (kmDistance < minDistance) {
           kmDistance = 0
@@ -109,6 +118,7 @@ export class KmProcessFileService {
           }
         }
         item = { ...item, media  }
+
 
         //le asigna km1, km2, km3... dependiendo del itinerario.
         const kmItinerary = JSON.parse(`{ "${name}": ${ kmDistance } }`)
