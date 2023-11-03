@@ -29,7 +29,7 @@ export const getFormatStringDate = (date: string) =>{
     return newDate
 } 
 
-export const getFormatDatatime = (datetime) =>{
+export const getFormatDatatime = (datetime: string) =>{
     if(datetime.includes('-')) return datetime
     const dateTimeSplit = datetime.split(' ')
     const date = dateTimeSplit[0]

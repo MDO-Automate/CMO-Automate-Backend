@@ -78,18 +78,18 @@ export class KmProcessFileService {
         let kmDistance = parseInt(`${item.distancia}`)
   
         //Validación de criterios
-        if (kmDistance > 0 && porcParada < 5) {
-          kmDistance = 0
-          item = { 
-            ...item, 
-            distanciaYParadas: true 
-          }
-        }
         if (kmDistance < minDistance) {
           kmDistance = 0
           item = 
           { ...item, 
             minor500: true 
+          }
+        }
+        else if (kmDistance > 0 && porcParada < 5) {
+          kmDistance = 0
+          item = { 
+            ...item, 
+            distanciaYParadas: true 
           }
         }
         if(kmDistance > media && kmDistance < (media + overDistance)){

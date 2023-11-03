@@ -136,14 +136,17 @@ export class KmAnalisisService {
         ...whereOptions,
         ...criterioKey
       }
-    }
+    } 
+
+    const zonaHorariaColombia = 'SA Pacific Standard Time'; 
     return this.kmAnalisisRepository
     .createQueryBuilder('km')
     .innerJoinAndSelect('km.itinerario', 'i',   'i.id  = km.itinerario')
     .innerJoinAndSelect('km.linea', 'r',  'r.id = km.linea')
+    .addSelect(`km.inicioServicio, km.finServicio AT TIME ZONE :zonaHoraria`)
+    .setParameter('zonaHoraria', zonaHorariaColombia)
     .where(whereOptions)
     .getMany()
-
   }
 
   async update(updateKmAnalisiDto: UpdateKmAnalisiDto) {
