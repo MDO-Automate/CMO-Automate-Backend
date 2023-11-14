@@ -5,11 +5,13 @@ import { Ruta } from './entities/ruta.entity';
 import { RutasService } from './rutas.service';
 import { RutasController } from './rutas.controller';
 import { RutasDetailsService } from './rutas-details.service';
+import { CirculationService } from './circulation.service';
+import { Circulacion } from './entities/circulacion.entity';
 
 @Module({
-  imports: [ TypeOrmModule.forFeature([Ruta]) ],
+  imports: [ TypeOrmModule.forFeature([Ruta, Circulacion]) ],
   exports: [ TypeOrmModule ],
   controllers: [RutasController],
-  providers: [RutasService, RutasDetailsService],
+  providers: [RutasService, RutasDetailsService, CirculationService],
 })
 export class RutasModule {}

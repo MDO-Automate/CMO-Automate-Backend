@@ -1,14 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
 import * as xlsx from 'xlsx'
+import { BadRequestException, Injectable } from '@nestjs/common'
+
 
 import { KmAnalisis }     from '@models/kmAnalisis'
 import { getDataKm }      from '@utils/getDataKm'
-import { getFormatHours } from '@utils/date'
 
 import { RutasDetailsService }      from '../rutas/rutas-details.service'
 import { getDataObjectSortDesc }    from '@utils/getDataSortDesc'
 import { ResumenElectricaService }  from '../resumen-electrica/resumen-electrica.service'
 import { InformeGeneralService } from '../informe-general/informe-general.service'
+import { CalculateCriteriosService } from '../criterios/calculate-criterios.service'
 
 
 @Injectable()
@@ -17,7 +18,8 @@ export class KmProcessFileService {
     private routeDetailsService: RutasDetailsService,
     private resumenElectricaService: ResumenElectricaService,
     private informeGeneralService: InformeGeneralService,
-    ) {}
+    private calculateCriteriosService: CalculateCriteriosService
+  ) {}
 
   getDataFromFile(file: any) {
     const workbook = xlsx.read(file.buffer, { type: 'buffer' })
@@ -36,8 +38,8 @@ export class KmProcessFileService {
    
     return {
       analisisKm : averageRoundDataSort,
-      resumenElec: [summaryElectricData],
-      resumenGeneral: [generalSummary]
+      resumenElec: [ summaryElectricData ],
+      resumenGeneral: [ generalSummary ]
     }
   }
 
@@ -61,71 +63,33 @@ export class KmProcessFileService {
           verifique que la información de la ruta se encuentre cargada.`
         )
     }
-    return await this.validateData(data, routeName, schedulesRoute)
+    return await this.validateData(data, routeName)
   }
 
-  async validateData(data: KmAnalisis[], routeName:string, schedulesRoute: any){
-    const minDistance = 500
-    const overDistance = 200
-    const { startRoute } = schedulesRoute
+  async validateData(data: KmAnalisis[], routeName:string,){
 
     return await Promise.all(
       data.map(async (item) => {
-        const porcParada = parseInt(item.porcParada)
-        const start = getFormatHours(item.inicioServicioEfectivo.split(' ')[1])
         const { name, media } = await this.routeDetailsService.getItineraryDistance(`${routeName}`,`${item.itinerario}`)
-        const endEfectiveServiceDate = item.finServicioEfectivo.split(' ')[0]
-        const startServiceDate =  item.inicioServicio.split(' ')[0]
-        let kmDistance = parseInt(`${item.distancia}`)
+        const date = item.inicioServicio.split(' ')[0]
+  
+        item.kmDistance = parseInt(`${item.distancia}`)
 
-        if(endEfectiveServiceDate !== startServiceDate){
-          const hour = item.finServicioEfectivo.split(' ')[1]
-          item = {
-            ...item,
-            finServicioEfectivo: `${startServiceDate} ${hour}`
-          }
-        }
+        item = await this.calculateCriteriosService.circulationWrong(item)
+        item = await this.calculateCriteriosService.differenceItineraryEndHour(item)
+        item = await this.calculateCriteriosService.minor500(item)
+        item = await this.calculateCriteriosService.DGreater0AndPercStopMinorFive(item)
+        item = await this.calculateCriteriosService.DGreaterAverageAndDGreaterAverageAbove200(item, media)
+        item = await this.calculateCriteriosService.DMinorAverageAndPercStopGreater99(item, media)
 
-        //Validación de criterios
-        if (kmDistance < minDistance) {
-          kmDistance = 0
-          item = 
-          { ...item, 
-            minor500: true 
-          }
-        }
-        else if (kmDistance > 0 && porcParada < 5) {
-          kmDistance = 0
-          item = { 
-            ...item, 
-            distanciaYParadas: true 
-          }
-        }
-        if(kmDistance > media && kmDistance < (media + overDistance)){
-          kmDistance = media
-        }
-        if (kmDistance < media && porcParada > 99) {   
-          kmDistance = media
-          item = { 
-            ...item, 
-            distanciaYMedia: true 
-          }
-        }
-        if(start < startRoute){
-          item = { 
-            ...item, 
-            fueraHorario: true 
-          }
-        }
-        item = { ...item, media  }
-
+        item = { ...item, media }
 
         //le asigna km1, km2, km3... dependiendo del itinerario.
-        const kmItinerary = JSON.parse(`{ "${name}": ${ kmDistance } }`)
+        const kmItinerary = JSON.parse(`{ "${name}": ${ item.kmDistance } }`)
         return {
           ...item,
           ...kmItinerary,
-          fecha: item.inicioServicio.split(' ')[0]
+          fecha: date
         }
       })
     )

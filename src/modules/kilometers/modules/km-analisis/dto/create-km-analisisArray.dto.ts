@@ -146,7 +146,12 @@ export class CreateKmAnalisiArrayDto {
     @IsOptional()
     @IsBoolean()
     fueraHorario: boolean
-    
+
+    @ApiProperty()
+    @IsOptional()
+    @IsBoolean()
+    malEnrutado: boolean
+
     @IsOptional()
     @ApiProperty()
     @IsString()

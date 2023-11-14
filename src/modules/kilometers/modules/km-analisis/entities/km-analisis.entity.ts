@@ -1,6 +1,7 @@
 import { Itinerario } from '../../itinerarios/entities/itinerario.entity';
 import { Ruta } from '../../rutas/entities/ruta.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { KmIncidencia } from './km-incidencias.entity';
 
 @Entity()
 export class KmAnalisis {
@@ -70,7 +71,12 @@ export class KmAnalisis {
 
     @Column({ default: false }) fueraHorario: boolean
 
+    @Column({ default: false }) malEnrutado: boolean
+
     @Column({ type: 'date' }) fecha: string
+
+    @ManyToOne(() => KmIncidencia, incidencia => incidencia.id)
+    @JoinColumn({ name: 'incidencia' }) incidencia: KmIncidencia
 
     @Column({ default: '' }) obs: string
 

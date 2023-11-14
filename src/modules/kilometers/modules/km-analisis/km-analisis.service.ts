@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Equal, FindOptionsWhere, Repository } from 'typeorm';
 
@@ -42,7 +42,7 @@ export class KmAnalisisService {
       inicioServicio: getFormatDatatime(item.inicioServicio),
       finServicio: getFormatDatatime(item.finServicio),
       inicioServicioEfectivo:  getFormatDatatime(item.inicioServicioEfectivo),
-      finServicioEfectivo:  getFormatDatatime(item.inicioServicioEfectivo),
+      finServicioEfectivo:  getFormatDatatime(item.finServicioEfectivo),
       linea: line[0],
       itinerario: itinerary[0]
     }
@@ -77,7 +77,6 @@ export class KmAnalisisService {
   }
 
   async multiFilter(filter: any){
-    console.log(filter)
     const { 
       ruta,
       fecha,
@@ -138,13 +137,13 @@ export class KmAnalisisService {
       }
     } 
 
-    const zonaHorariaColombia = 'SA Pacific Standard Time'; 
+    //const zonaHorariaColombia = 'SA Pacific Standard Time'; 
     return this.kmAnalisisRepository
     .createQueryBuilder('km')
     .innerJoinAndSelect('km.itinerario', 'i',   'i.id  = km.itinerario')
     .innerJoinAndSelect('km.linea', 'r',  'r.id = km.linea')
-    .addSelect(`km.inicioServicio, km.finServicio AT TIME ZONE :zonaHoraria`)
-    .setParameter('zonaHoraria', zonaHorariaColombia)
+    //.addSelect(`km.inicioServicio, km.finServicio AT TIME ZONE :zonaHoraria`)
+    //.setParameter('zonaHoraria', zonaHorariaColombia)
     .where(whereOptions)
     .getMany()
   }
@@ -159,11 +158,15 @@ export class KmAnalisisService {
       }
 
       delete item.id
-      const update = this.kmAnalisisRepository.create(item)
-      return this.kmAnalisisRepository.update({ id }, update )
+      try{
+        const update = this.kmAnalisisRepository.create(item)       
+        return this.kmAnalisisRepository.update({ id }, update )
+      }catch(e){
+         throw new InternalServerErrorException('Error de base de datos')
+      }
+      
     })
 
     return updated
   }
-
 }

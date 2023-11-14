@@ -8,7 +8,6 @@ import { KmAnalisis } from './entities/km-analisis.entity';
 import { RutasModule } from '../rutas/rutas.module';
 import { RutasDetailsService } from '../rutas/rutas-details.service';
 import { CriteriosService } from '../criterios/criterios.service';
-import { Criterio } from '../criterios/entities/criterio.entity';
 import { RutasService } from '../rutas/rutas.service';
 import { ItinerariosService } from '../itinerarios/itinerarios.service';
 import { ItinerariosModule } from '../itinerarios/itinerarios.module';
@@ -16,16 +15,30 @@ import { ResumenElectricaService } from '../resumen-electrica/resumen-electrica.
 import { ResumenElectricaModule } from '../resumen-electrica/resumen-electrica.module';
 import { InformeGeneralService } from '../informe-general/informe-general.service';
 import { InformeGeneralModule } from '../informe-general/informe-general.module';
+import { CirculationService } from '../rutas/circulation.service';
+import { HorariosIitinerarioService } from '../itinerarios/horarios-itinerarios.service';
+import { CalculateCriteriosService } from '../criterios/calculate-criterios.service';
+import { CriteriosModule } from '../criterios/criterios.module';
+import { FestivosModule } from '../festivos/festivos.module';
+import { FestivosService } from '../festivos/festivos.service';
+import { KmIncidenciaServices } from './km-incidencia.service';
+import { KmIncidencia } from './entities/km-incidencias.entity';
+import { KmIncidenciaController } from './km-incidencia.controller';
 
 @Module({
   imports: [ 
-    TypeOrmModule.forFeature([ KmAnalisis, Criterio ]),
+    TypeOrmModule.forFeature([ KmAnalisis, KmIncidencia ]),
     RutasModule,
     ItinerariosModule,
     ResumenElectricaModule,
-    InformeGeneralModule
+    InformeGeneralModule,
+    CriteriosModule,
+    FestivosModule
   ],
-  controllers: [KmAnalisisController],
+  controllers: [
+    KmAnalisisController, 
+    KmIncidenciaController
+  ],
   providers: [
     KmAnalisisService, 
     KmProcessFileService,
@@ -34,7 +47,12 @@ import { InformeGeneralModule } from '../informe-general/informe-general.module'
     ItinerariosService,
     CriteriosService,
     ResumenElectricaService,
-    InformeGeneralService
+    InformeGeneralService,
+    CirculationService,
+    HorariosIitinerarioService,
+    CalculateCriteriosService,
+    FestivosService,
+    KmIncidenciaServices
   ],
 })
 export class KmAnalisisModule {}

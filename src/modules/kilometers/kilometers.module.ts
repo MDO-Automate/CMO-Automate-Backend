@@ -5,6 +5,7 @@ import { ItinerariosModule } from './modules/itinerarios/itinerarios.module';
 import { KmAnalisisModule } from './modules/km-analisis/km-analisis.module';
 import { ResumenElectricaModule } from './modules/resumen-electrica/resumen-electrica.module';
 import { RutasModule } from './modules/rutas/rutas.module';
+import { FestivosModule } from './modules/festivos/festivos.module';
 
 @Module({
     imports: [
@@ -13,7 +14,8 @@ import { RutasModule } from './modules/rutas/rutas.module';
         ItinerariosModule,
         KmAnalisisModule,
         ResumenElectricaModule,
-        RutasModule 
+        RutasModule,
+        FestivosModule 
     ]
 })
 export class KilometersModule {}

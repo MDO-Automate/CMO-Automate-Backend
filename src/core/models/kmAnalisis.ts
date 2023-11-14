@@ -31,6 +31,8 @@ export interface KmAnalisis {
     distanciaYMedia: boolean
     distanciaYParadas: boolean
     fueraHorario: boolean
+    malEnrutado: boolean
+    kmDistance: number
     fecha: string
     obs: string
 }

@@ -25,6 +25,7 @@ export class RutasService {
     return this.rutasRepository.findBy({ id })
   }
 
+
   findOneByName(nombre: string) {
     return this.rutasRepository.findBy({ nombre })
   }

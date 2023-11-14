@@ -9,6 +9,8 @@ import { ResumenElectrica }     from    '@modules/kilometers/modules/resumen-ele
 import { Ruta }                 from    '@modules/kilometers/modules/rutas/entities/ruta.entity';
 import { Circulacion }          from    '@modules/kilometers/modules/rutas/entities/circulacion.entity';
 import { HorariosIitinerario }  from    '@modules/kilometers/modules/itinerarios/entities/horarios-itinerario.entity';
+import { Festivos }             from    '@modules/kilometers/modules/festivos/entities/festivo.entity';
+import { KmIncidencia } from '@modules/kilometers/modules/km-analisis/entities/km-incidencias.entity';
 
 @Module({
   imports: [
@@ -20,7 +22,9 @@ import { HorariosIitinerario }  from    '@modules/kilometers/modules/itinerarios
       password: process.env.DBPASS,
       database: process.env.DBNAME,
       synchronize: true, 
-      options: { encrypt: false },
+      options: { 
+        encrypt: false,
+      },
       entities: [
         Criterio,
         Itinerario,
@@ -29,7 +33,9 @@ import { HorariosIitinerario }  from    '@modules/kilometers/modules/itinerarios
         KmAnalisis,
         ResumenElectrica,
         Circulacion,
-        HorariosIitinerario
+        HorariosIitinerario,
+        Festivos,
+        KmIncidencia
       ],
     }),
   ],
