@@ -142,8 +142,7 @@ export class KmAnalisisService {
     .createQueryBuilder('km')
     .innerJoinAndSelect('km.itinerario', 'i',   'i.id  = km.itinerario')
     .innerJoinAndSelect('km.linea', 'r',  'r.id = km.linea')
-    //.addSelect(`km.inicioServicio, km.finServicio AT TIME ZONE :zonaHoraria`)
-    //.setParameter('zonaHoraria', zonaHorariaColombia)
+    .innerJoinAndSelect('km.incidencia', 'inci',  'inci.id = km.incidencia')
     .where(whereOptions)
     .getMany()
   }

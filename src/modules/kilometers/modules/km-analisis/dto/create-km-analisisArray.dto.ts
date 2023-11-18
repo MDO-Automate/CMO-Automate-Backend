@@ -2,6 +2,7 @@ import { Ruta } from '../../rutas/entities/ruta.entity'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
 import { Itinerario } from '../../itinerarios/entities/itinerario.entity'
+import { KmIncidencia } from '../entities/km-incidencias.entity'
 
 export class CreateKmAnalisiArrayDto {
 
@@ -161,5 +162,10 @@ export class CreateKmAnalisiArrayDto {
     @ApiProperty()
     @IsString()
     obs: string
+
+    @IsOptional()
+    @ApiProperty()
+    @IsString()
+    incidencia: KmIncidencia
 
 }

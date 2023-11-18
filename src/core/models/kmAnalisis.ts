@@ -1,3 +1,4 @@
+
 export interface KmAnalisis {
     id: number
     idSae: string
@@ -33,6 +34,7 @@ export interface KmAnalisis {
     fueraHorario: boolean
     malEnrutado: boolean
     kmDistance: number
+    incidencia: number
     fecha: string
     obs: string
 }
