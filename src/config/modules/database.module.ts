@@ -12,6 +12,19 @@ import { HorariosIitinerario }  from    '@modules/kilometers/modules/itinerarios
 import { Festivos }             from    '@modules/kilometers/modules/festivos/entities/festivo.entity';
 import { KmIncidencia } from '@modules/kilometers/modules/km-analisis/entities/km-incidencias.entity';
 
+const entities =  [
+  Criterio,
+  Itinerario,
+  Ruta,
+  InformeGeneral,
+  KmAnalisis,
+  ResumenElectrica,
+  Circulacion,
+  HorariosIitinerario,
+  Festivos,
+  KmIncidencia
+]
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -25,21 +38,10 @@ import { KmIncidencia } from '@modules/kilometers/modules/km-analisis/entities/k
       options: { 
         encrypt: false,
       },
-      entities: [
-        Criterio,
-        Itinerario,
-        Ruta,
-        InformeGeneral,
-        KmAnalisis,
-        ResumenElectrica,
-        Circulacion,
-        HorariosIitinerario,
-        Festivos,
-        KmIncidencia
-      ],
+      entities,
     }),
   ],
   controllers: [],
   providers: [],
 })
-export class DatabaseModule {}
+export class DatabaseModule {}2
