@@ -56,7 +56,13 @@ export class CirculationService {
        throw new BadRequestException('No se encontró una circulación con ese ID.')
     }
     const update = this.circulationRepository.create(updateCirculationDTO)
-    return this.circulationRepository.update( { id },  update)
+    try {
+      this.circulationRepository.update( { id },  update)
+      return updateCirculationDTO
+    }catch(err){
+      throw new BadRequestException(err)
+    }
+    
   }
 
 
@@ -65,7 +71,16 @@ export class CirculationService {
     if(circulationFound.length < 1){
       throw new BadRequestException ('No se encontró una circulación con ese ID.')
     }
-    return this.circulationRepository.delete({ id })
+    try {
+      this.circulationRepository.delete({ id })
+      return {
+        status: 200,
+        message: `Se ha eliminado el ID: ${id}`
+      }
+    }
+    catch(err){
+      throw new BadRequestException(err)
+    }
   }
 
 
