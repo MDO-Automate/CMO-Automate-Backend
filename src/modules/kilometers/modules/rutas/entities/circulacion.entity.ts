@@ -5,8 +5,9 @@ import { Ruta } from './ruta.entity';
 export class Circulacion {
     @PrimaryGeneratedColumn() id: number
 
+    @Column() circulacion: number
+
     @ManyToOne(() => Ruta, ruta => ruta.id)
     @JoinColumn({ name: 'linea' }) linea: Ruta
 
-    @Column() circulacion: number
 }

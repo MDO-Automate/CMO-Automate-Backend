@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ruta } from './entities/ruta.entity';
 import { Repository } from 'typeorm';
@@ -21,8 +21,8 @@ export class RutasService {
     return this.rutasRepository.find()
   }
 
-  findOne(id: number) {
-    return this.rutasRepository.findBy({ id })
+  async findOne(id: number) {
+    return await this.rutasRepository.findBy({ id })
   }
 
 
@@ -35,7 +35,11 @@ export class RutasService {
     return this.rutasRepository.update( { id },  update)
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const RouteFound = await this.findOne(id)
+    if(RouteFound.length < 1){
+      throw new BadRequestException ('No se encontró una ruta con ese ID.')
+    }
     return this.rutasRepository.delete({ id })
   }
 }
