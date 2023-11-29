@@ -82,7 +82,7 @@ export class CalculateCriteriosService {
 
     const date = getFormatDate(currentDate)
     const typeDay = getDayType(date)
-    const holiday = await this.festivosService.findByDate(currentDate)
+    const holiday = await this.festivosService.getByDate(currentDate)
     const typeDayName = holiday.length > 0 ? columnDay['holidays'] : columnDay[typeDay]
     const endHourItinerary = itinerary[0][typeDayName]
 

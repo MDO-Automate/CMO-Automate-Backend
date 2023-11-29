@@ -36,5 +36,4 @@ export class CirculationController {
         return this.circulationService.remove(id)
     }
 
-
 }

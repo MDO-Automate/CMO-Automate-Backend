@@ -1,4 +1,14 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateFestivoDto } from './create-festivo.dto';
+import { ApiProperty } from "@nestjs/swagger"
+import { IsString } from "class-validator"
 
-export class UpdateFestivoDto extends PartialType(CreateFestivoDto) {}
+export class UpdateFestivoDto {
+    
+    @ApiProperty()
+    @IsString()
+    fecha: string
+
+    @ApiProperty()
+    @IsString()
+    nombre: string
+
+}
