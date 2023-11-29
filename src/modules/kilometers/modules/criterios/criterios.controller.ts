@@ -20,9 +20,9 @@ export class CriteriosController {
     return this.criteriosService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.criteriosService.findOne(+id);
+  @Get(':name')
+  findByName(@Param('name') name:string) {
+    return this.criteriosService.findByName(name);
   }
 
   @Patch(':id')
