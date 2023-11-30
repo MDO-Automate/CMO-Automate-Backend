@@ -12,17 +12,12 @@ export class RutasService {
     @InjectRepository(Ruta) private rutasRepository: Repository<Ruta>
   ){}
   
-  create(createRutaDto: CreateRutaDto) {
-    const data = this.rutasRepository.create(createRutaDto)
-    return this.rutasRepository.save(data)
-  }	
-
   findAll() {
     return this.rutasRepository.find()
   }
 
-  async findOne(id: number) {
-    return await this.rutasRepository.findBy({ id })
+  findOne(id: number) {
+    return this.rutasRepository.findBy({ id })
   }
 
 
@@ -30,16 +25,44 @@ export class RutasService {
     return this.rutasRepository.findBy({ nombre })
   }
 
-  update(id: number, updateRutaDto: UpdateRutaDto) {
+  async create(createRutaDto: CreateRutaDto) {
+    const data = this.rutasRepository.create(createRutaDto)
+    const rutasFound = await this.findOneByName(data.nombre)
+    if (rutasFound.length > 0) {
+      throw new BadRequestException("Ya existe una ruta con ese nombre");
+    }
+    return this.rutasRepository.save(data)
+  }	
+
+
+  async update(id: number, updateRutaDto: UpdateRutaDto) {
+    const rutasFound = await this.findOne(id)
+    if (rutasFound.length < 1) {
+      throw new BadRequestException('No se encontró una ruta con ese ID')
+    }
     const update = this.rutasRepository.create(updateRutaDto)
-    return this.rutasRepository.update( { id },  update)
+    try {
+      this.rutasRepository.update({id}, update)
+      return updateRutaDto
+    } catch (err) {
+      throw new BadRequestException(err);
+      
+    }
   }
 
   async remove(id: number) {
-    const RouteFound = await this.findOne(id)
-    if(RouteFound.length < 1){
+    const rutasFound = await this.findOne(id)
+    if(rutasFound.length < 1){
       throw new BadRequestException ('No se encontró una ruta con ese ID.')
     }
-    return this.rutasRepository.delete({ id })
+    try {
+      this.rutasRepository.delete({id})
+      return {
+        status: 200,
+        message: `Se ha eliminado el ID: ${id}`
+      }
+    } catch (err) {
+      throw new BadRequestException(err)
+    }
   }
 }

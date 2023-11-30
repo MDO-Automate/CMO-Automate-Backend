@@ -22,7 +22,6 @@ export class ItinerariosService {
     return this.itinerarioRepository.findBy({ id });
   }
   
-
   async create(createItinerarioDto: CreateItinerarioDto) {
     const create = this.itinerarioRepository.create(createItinerarioDto)
     const itinerariosFound = await this.findOneByName(create.nombre)
