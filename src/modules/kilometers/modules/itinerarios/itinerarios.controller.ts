@@ -20,18 +20,18 @@ export class ItinerariosController {
     return this.itinerariosService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.itinerariosService.findOne(+id);
+  @Get(':nombre')
+  findOneByName(@Param('nombre') nombre: string) {
+    return this.itinerariosService.findOneByName(nombre);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateItinerarioDto: UpdateItinerarioDto) {
+  update(@Param('id') id: number, @Body() updateItinerarioDto: UpdateItinerarioDto) {
     return this.itinerariosService.update(+id, updateItinerarioDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.itinerariosService.remove(+id);
   }
 }

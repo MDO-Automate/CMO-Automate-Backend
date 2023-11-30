@@ -42,8 +42,8 @@ export class CirculationService {
 
   async create(createCirculation: CreateCirculationDTO){
     const create = this.circulationRepository.create(createCirculation)
-    const circulationsFinded = await this.getCirculationByName(create.circulacion)
-    if(circulationsFinded.length > 0){
+    const circulationsFound = await this.getCirculationByName(create.circulacion)
+    if(circulationsFound.length > 0){
        throw new BadRequestException('Ya existe una circulación con ese número.')
     }
     return this.circulationRepository.save(create)

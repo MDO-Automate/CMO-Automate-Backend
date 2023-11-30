@@ -7,6 +7,7 @@ import { HorariosIitinerarioService } from './horarios-itinerarios.service';
 import { HorariosIitinerario } from './entities/horarios-itinerario.entity';
 import { RutasModule } from '../rutas/rutas.module';
 import { RutasService } from '../rutas/rutas.service';
+import { HorariosItinerariosController } from './horarios-itinerarios.controller';
 
 @Module({
   imports: [ 
@@ -14,7 +15,7 @@ import { RutasService } from '../rutas/rutas.service';
     RutasModule
  ],
   exports: [ TypeOrmModule ],
-  controllers: [ItinerariosController],
+  controllers: [ItinerariosController, HorariosItinerariosController],
   providers: [ItinerariosService, HorariosIitinerarioService, RutasService],
 })
 export class ItinerariosModule {}
