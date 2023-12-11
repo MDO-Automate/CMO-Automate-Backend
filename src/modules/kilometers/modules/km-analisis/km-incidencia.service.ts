@@ -17,12 +17,12 @@ export class KmIncidenciaServices {
         return this.kmInicidenciaRepository.find()
     }
 
-    findOne(id: number) {
-        return this.kmInicidenciaRepository.findBy({id})
-    }
-
     findByName(nombre: string) {
         return this.kmInicidenciaRepository.findBy({ nombre })
+    }
+
+    findOne(id: number) {
+        return this.kmInicidenciaRepository.findBy({id})
     }
     
     async create(createIncidenciaDTO: CreateIncidenciaDTO) {
