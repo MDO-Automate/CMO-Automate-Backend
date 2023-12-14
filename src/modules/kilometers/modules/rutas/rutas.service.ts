@@ -13,7 +13,13 @@ export class RutasService {
   ){}
   
   findAll() {
-    return this.rutasRepository.find()
+    return this.rutasRepository
+    .createQueryBuilder('r')          
+    .innerJoinAndSelect('r.itinerario1', 'i',   'i.id  = r.itinerario1')
+    .innerJoinAndSelect('r.itinerario2', 'i2',  'i2.id = r.itinerario2')
+    .innerJoinAndSelect('r.itinerario3', 'i3',  'i3.id = r.itinerario3')
+    .innerJoinAndSelect('r.itinerario4', 'i4',  'i4.id = r.itinerario4')
+    .getMany();
   }
 
   findOne(id: number) {
@@ -29,7 +35,7 @@ export class RutasService {
     const data = this.rutasRepository.create(createRutaDto)
     const rutasFound = await this.findOneByName(data.nombre)
     if (rutasFound.length > 0) {
-      throw new BadRequestException("Ya existe una ruta con ese nombre");
+      throw new BadRequestException('Ya existe una ruta con ese nombre');
     }
     return this.rutasRepository.save(data)
   }	
