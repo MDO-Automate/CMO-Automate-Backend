@@ -18,7 +18,7 @@ export class InformeGeneralController {
   @Get()
   @ApiQuery({ name: 'fecha' })
   @ApiQuery({ name: 'ruta' })
-  findDateAndRoute(@Query('fecha') fecha: string, @Query('ruta') ruta: string) {
+  findDateAndRoute(@Query('fecha') fecha: string, @Query('linea') ruta: string) {
     return this.informeGeneralService.findByMonthAndRoute(fecha, ruta);
   }
 

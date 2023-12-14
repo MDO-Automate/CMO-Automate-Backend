@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm';
-import { KmIncidencia } from './entities/km-incidencias.entity';
+import { KmIncidencia } from '../entities/km-incidencias.entity';
 import { Repository } from 'typeorm';
-import { CreateIncidenciaDTO } from './dto/create-km-incidencia.dto';
-import { UpdateIncidenciaDTO } from './dto/update-km-incidencia.dto';
+import { CreateIncidenciaDTO } from '../dto/create-km-incidencia.dto';
+import { UpdateIncidenciaDTO } from '../dto/update-km-incidencia.dto';
 
 @Injectable()
 export class KmIncidenciaServices {

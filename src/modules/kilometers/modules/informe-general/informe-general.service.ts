@@ -79,7 +79,6 @@ export class InformeGeneralService {
       fecha: Between(startDate, endtDate),
       linea: route
     }
-
     return this.informeGeneralRepository
     .createQueryBuilder('km')
     .innerJoinAndSelect('km.linea', 'l',   'l.id  = km.linea')
