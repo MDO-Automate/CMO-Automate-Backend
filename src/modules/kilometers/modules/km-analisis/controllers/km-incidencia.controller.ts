@@ -20,9 +20,9 @@ export class KmIncidenciaController {
         return this.kmIncidenciaServices.findAll()
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: number) {
-        return this.kmIncidenciaServices.findOne(id)
+    @Get(':name')
+    findByName(@Param('name') nombre: string) {
+        return this.kmIncidenciaServices.findByName(nombre)
     }
 
     @Patch(':id')
