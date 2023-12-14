@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
  
-import { KmAnalisisService } from './km-analisis.service';
-import { KmAnalisisController } from './km-analisis.controller';
-import { KmProcessFileService } from './km-processfile.service';
+import { KmAnalisisService } from './services/km-analisis.service';
+import { KmAnalisisController } from './controllers/km-analisis.controller';
+import { KmProcessFileService } from './services/km-processfile.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KmAnalisis } from './entities/km-analisis.entity';
 import { RutasModule } from '../rutas/rutas.module';
@@ -21,9 +21,9 @@ import { CalculateCriteriosService } from '../criterios/calculate-criterios.serv
 import { CriteriosModule } from '../criterios/criterios.module';
 import { FestivosModule } from '../festivos/festivos.module';
 import { FestivosService } from '../festivos/festivos.service';
-import { KmIncidenciaServices } from './km-incidencia.service';
+import { KmIncidenciaServices } from './services/km-incidencia.service';
 import { KmIncidencia } from './entities/km-incidencias.entity';
-import { KmIncidenciaController } from './km-incidencia.controller';
+import { KmIncidenciaController } from './controllers/km-incidencia.controller';
 
 @Module({
   imports: [ 

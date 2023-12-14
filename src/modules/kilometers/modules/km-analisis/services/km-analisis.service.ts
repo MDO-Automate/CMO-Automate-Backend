@@ -2,15 +2,15 @@ import { Injectable, BadRequestException, InternalServerErrorException } from '@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Equal, FindOptionsWhere, Repository } from 'typeorm';
 
-import { KmAnalisis } from './entities/km-analisis.entity';
-import { CreateKmAnalisiDto } from './dto/create-km-analisi.dto';
-import { UpdateKmAnalisiDto } from './dto/update-km-analisi.dto';
+import { KmAnalisis } from '../entities/km-analisis.entity';
+import { CreateKmAnalisiDto } from '../dto/create-km-analisi.dto';
+import { UpdateKmAnalisiDto } from '../dto/update-km-analisi.dto';
 import { KmProcessFileService } from './km-processfile.service';
 import { getFormatDatatime, getFormatStringDate } from 'src/utils/date';
-import { CriteriosService } from '../criterios/criterios.service';
-import { RutasService } from '../rutas/rutas.service';
-import { ItinerariosService } from '../itinerarios/itinerarios.service';
-import { CreateKmAnalisiArrayDto } from './dto/create-km-analisisArray.dto';
+import { CriteriosService } from '../../criterios/criterios.service';
+import { RutasService } from '../../rutas/rutas.service';
+import { ItinerariosService } from '../../itinerarios/itinerarios.service';
+import { CreateKmAnalisiArrayDto } from '../dto/create-km-analisisArray.dto';
 
 
 @Injectable()
@@ -56,6 +56,18 @@ export class KmAnalisisService {
           ...item,
           ...dataAssigned
         }
+        const { fecha } = item
+        const  linea = item.linea.id
+
+        //Revisar validación.
+        const dataFound = await this.multiFilter({ fecha, linea })
+        if(dataFound.length > 0) {
+          throw new 
+          BadRequestException(
+            'Se encuentraron registros asociados a la fecha y ruta.',
+            'ruta'
+          )
+        }
         const data = this.kmAnalisisRepository.create(item)
         return await this.kmAnalisisRepository.save(data)
       }))
@@ -77,8 +89,9 @@ export class KmAnalisisService {
   }
 
   async multiFilter(filter: any){
+    
     const { 
-      ruta,
+      linea,
       fecha,
       itinerario,
       criterio,
@@ -86,7 +99,7 @@ export class KmAnalisisService {
       kmFinal 
     } = filter
 
-    if(!ruta) {
+    if(!linea) {
       throw new 
         BadRequestException(
           'No se encontró query de ruta filtrar.',
@@ -102,8 +115,9 @@ export class KmAnalisisService {
         )
     }
 
+
     let whereOptions: FindOptionsWhere<KmAnalisis>  = {
-      linea: Equal(ruta),
+      linea: Equal(linea),
       fecha: getFormatStringDate(fecha)
     }
 
@@ -137,14 +151,16 @@ export class KmAnalisisService {
       }
     } 
 
-    //const zonaHorariaColombia = 'SA Pacific Standard Time'; 
-    return this.kmAnalisisRepository
+    const response = await this.kmAnalisisRepository
     .createQueryBuilder('km')
     .innerJoinAndSelect('km.itinerario', 'i',   'i.id  = km.itinerario')
     .innerJoinAndSelect('km.linea', 'r',  'r.id = km.linea')
     .innerJoinAndSelect('km.incidencia', 'inci',  'inci.id = km.incidencia')
     .where(whereOptions)
     .getMany()
+
+    //const zonaHorariaColombia = 'SA Pacific Standard Time'; 
+    return response
   }
 
   async update(updateKmAnalisiDto: UpdateKmAnalisiDto) {

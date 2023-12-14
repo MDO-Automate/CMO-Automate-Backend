@@ -5,11 +5,11 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { KmAnalisis }     from '@models/kmAnalisis'
 import { getDataKm }      from '@utils/getDataKm'
 
-import { RutasDetailsService }      from '../rutas/rutas-details.service'
+import { RutasDetailsService }      from '../../rutas/rutas-details.service'
 import { getDataObjectSortDesc }    from '@utils/getDataSortDesc'
-import { ResumenElectricaService }  from '../resumen-electrica/resumen-electrica.service'
-import { InformeGeneralService } from '../informe-general/informe-general.service'
-import { CalculateCriteriosService } from '../criterios/calculate-criterios.service'
+import { ResumenElectricaService }  from '../../resumen-electrica/resumen-electrica.service'
+import { InformeGeneralService } from '../../informe-general/informe-general.service'
+import { CalculateCriteriosService } from '../../criterios/calculate-criterios.service'
 
 
 @Injectable()

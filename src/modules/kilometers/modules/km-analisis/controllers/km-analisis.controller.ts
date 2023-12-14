@@ -13,10 +13,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger'
 
-import { KmAnalisisService } from './km-analisis.service'
-import { CreateKmAnalisiDto } from './dto/create-km-analisi.dto'
-import { UpdateKmAnalisiDto } from './dto/update-km-analisi.dto'
-import { FileUploadDto } from './dto/upload-file.dto'
+import { KmAnalisisService } from '../services/km-analisis.service'
+import { CreateKmAnalisiDto } from '../dto/create-km-analisi.dto'
+import { UpdateKmAnalisiDto } from '../dto/update-km-analisi.dto'
+import { FileUploadDto } from '../dto/upload-file.dto'
 import { fileFilterXSL } from 'src/utils/fileFilterXSL'
 
 @ApiTags('KM análisis')
@@ -60,7 +60,7 @@ export class KmAnalisisController {
   @ApiQuery({ name: 'itinerario' })
   @ApiQuery({ name: 'criterio' })
   @ApiQuery({ name: 'fecha' })
-  @ApiQuery({ name: 'ruta' })
+  @ApiQuery({ name: 'linea' })
   multiFilter(@Query() params: string) {
     return this.kmAnalisisService.multiFilter(params)
   }

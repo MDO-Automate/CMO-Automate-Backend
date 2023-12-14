@@ -1,8 +1,8 @@
 import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Post, Body, Param, Patch, Delete } from '@nestjs/common';
-import { KmIncidenciaServices } from './km-incidencia.service';
-import { CreateIncidenciaDTO } from './dto/create-km-incidencia.dto';
-import { UpdateIncidenciaDTO } from './dto/update-km-incidencia.dto';
+import { KmIncidenciaServices } from '../services/km-incidencia.service';
+import { CreateIncidenciaDTO } from '../dto/create-km-incidencia.dto';
+import { UpdateIncidenciaDTO } from '../dto/update-km-incidencia.dto';
 
 @ApiTags('Incidencias en analisis de kilómetros')
 @Controller('km-incidencia')
