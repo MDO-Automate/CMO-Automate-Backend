@@ -27,7 +27,10 @@ export const getFormatDate = (date: string) =>{
 //convierte el formato de hora en yy-mm-aa devolviendo un formato en string
 export const getFormatStringDate = (date: string) =>{
     if(date.includes('-')) return date
-    const [ day, month, year ]= date.split('/')
+    const day = date.split('/')[0].padStart(2, '0')
+    const month = date.split('/')[1].padStart(2, '0')
+    const year = date.split('/')[2]
+    
     const newDate = `${year}-${month}-${day}`
     return newDate
 } 
@@ -35,11 +38,13 @@ export const getFormatStringDate = (date: string) =>{
 //devuelve un formato dateTime como yy-mm-aa hh:mm:ss
 export const getFormatDatatime = (datetime: string) =>{
     if(datetime.includes('-')) return datetime
+    if(!datetime.includes('/')) return '2000-01-01 00:00:00'
     const dateTimeSplit = datetime.split(' ')
     const date = dateTimeSplit[0]
+  
     const hours = getFormatHours(dateTimeSplit[1])
-    const day = date.split('/')[0]
-    const month = date.split('/')[1]
+    const day = date.split('/')[0].padStart(2, '0')
+    const month = date.split('/')[1].padStart(2, '0')
     const year = date.split('/')[2]
     const newDate = `${year}-${month}-${day} ${hours}`
     return newDate
@@ -47,6 +52,8 @@ export const getFormatDatatime = (datetime: string) =>{
 
 //devuelve formato de hora agregandole un 0 al comienzo de cada numero si lo necesita 01
 export const getFormatHours = (hourString: string)=>{
+    if(!hourString) return '00:00:00'
+    
     const hourSplit = hourString.split(':')
     const hour = hourSplit[0].padStart(2, '0')
     const minutes = hourSplit[1].padStart(2, '0')

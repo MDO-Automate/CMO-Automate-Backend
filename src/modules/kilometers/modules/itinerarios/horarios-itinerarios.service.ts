@@ -46,7 +46,7 @@ export class HorariosIitinerarioService {
     async update(id:number, updateHorariosItinerarioDto: UpdateHorariosItinerarioDto) {
         const horariosItiFound = await this.findOne(id)
         if (horariosItiFound.length < 1) {
-            throw new BadRequestException("No se encontró una relación entre un horario y un itinerario con ese ID");
+            throw new BadRequestException('No se encontró una relación entre un horario y un itinerario con ese ID');
         }
         const update = this.horariosItiRepository.create(updateHorariosItinerarioDto)
         try {

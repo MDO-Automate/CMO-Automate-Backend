@@ -66,37 +66,49 @@ export class CalculateCriteriosService {
   }
 
   async differenceItineraryEndHour(item: KmAnalisis) {
-    const service = this.horariosIitinerarioService;
-    const itinerary = await service.getEndHourByItineraryAndRoute(
-      `${item.itinerario}`,
-      `${item.linea}`,
-    );
-    const currentDate = item.inicioServicio.split(' ')[0];
 
-    const columnDay = {
-      habil:  'lvFin',
-      saturday: 'sFin',
-      sunday: 'dFin',
-      holidays: 'dFin',
+    try{
+      const service = this.horariosIitinerarioService;
+    
+      const currentDate = item.inicioServicio.split(' ')[0];
+      const itinerary = await service.getEndHourByItineraryAndRoute(
+        `${item.itinerario}`,
+        `${item.linea}`,
+      );
+      const columnDay = {
+        habil:  'lvFin',
+        saturday: 'sFin',
+        sunday: 'dFin',
+        holidays: 'dFin',
+      }
+  
+      const date = getFormatDate(currentDate)
+      const typeDay = getDayType(date)
+      const holiday = await this.festivosService.getByDate(currentDate)
+      const typeDayName = holiday.length > 0 ? columnDay['holidays'] : columnDay[typeDay]
+      const endHourItinerary = itinerary[0][typeDayName]
+  
+      const startServiceEfectiveHour = item.inicioServicioEfectivo.split(' ')[1]
+  
+  
+      const difference = differenceFiveMinutes(
+        endHourItinerary,
+        startServiceEfectiveHour,
+      )
+  
+      return {
+        ...item,
+        fueraHorario: difference,
+      };
+
+    }
+    catch(e){
+      return  {
+        ...item,
+        fueraHorario: false,
+      };
     }
 
-    const date = getFormatDate(currentDate)
-    const typeDay = getDayType(date)
-    const holiday = await this.festivosService.getByDate(currentDate)
-    const typeDayName = holiday.length > 0 ? columnDay['holidays'] : columnDay[typeDay]
-    const endHourItinerary = itinerary[0][typeDayName]
-
-    const startServiceEfectiveHour = item.inicioServicioEfectivo.split(' ')[1]
-
-    const difference = differenceFiveMinutes(
-      endHourItinerary,
-      startServiceEfectiveHour,
-    )
-
-    return {
-      ...item,
-      fueraHorario: difference,
-    };
   }
 
   async circulationWrong(item: KmAnalisis) {

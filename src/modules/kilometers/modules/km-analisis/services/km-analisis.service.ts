@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Equal, FindOptionsWhere, Repository } from 'typeorm';
 
@@ -12,176 +16,172 @@ import { RutasService } from '../../rutas/rutas.service';
 import { ItinerariosService } from '../../itinerarios/itinerarios.service';
 import { CreateKmAnalisiArrayDto } from '../dto/create-km-analisisArray.dto';
 
-
 @Injectable()
 export class KmAnalisisService {
-
   constructor(
     private processFileService: KmProcessFileService,
     private criteriosService: CriteriosService,
     private itinerariesService: ItinerariosService,
     private rutaService: RutasService,
-    @InjectRepository(KmAnalisis) private kmAnalisisRepository: Repository<KmAnalisis>,
-  ){}
+    @InjectRepository(KmAnalisis)
+    private kmAnalisisRepository: Repository<KmAnalisis>,
+  ) {}
 
-  async processFile(file: any){
-    const processedData = await this.processFileService.getProcessedData(file)
+  async processFile(file: any) {
+    const processedData = await this.processFileService.getProcessedData(file);
     return {
       statusCode: 200,
-      describe : 'Archivo procesado correctamente.', 
-      data: processedData
-    } 
+      describe: 'Archivo procesado correctamente.',
+      data: processedData,
+    };
   }
 
- async assignData(item: CreateKmAnalisiArrayDto){
-    const line = await this.rutaService.findOneByName(`${item.linea}`)
-    const itinerary = await this.itinerariesService.findOneByName(`${item.itinerario}`)
-    return item = {
+  async assignData(item: CreateKmAnalisiArrayDto) {
+    const defaultDateTime = '01/01/2000 00:00:00'
+    const line = await this.rutaService.findOneByName(`${item.linea}`);
+    const itinerary = await this.itinerariesService.findOneByName(
+      `${item.itinerario}`,
+    );
+    return (item = {
       ...item,
       fecha: getFormatStringDate(item.fecha),
-      inicioServicio: getFormatDatatime(item.inicioServicio),
-      finServicio: getFormatDatatime(item.finServicio),
-      inicioServicioEfectivo:  getFormatDatatime(item.inicioServicioEfectivo),
-      finServicioEfectivo:  getFormatDatatime(item.finServicioEfectivo),
+      inicioServicio: getFormatDatatime(item.inicioServicio || defaultDateTime),
+      finServicio: getFormatDatatime(item.finServicio || defaultDateTime),
+      inicioServicioEfectivo: getFormatDatatime(item.inicioServicioEfectivo || defaultDateTime),
+      finServicioEfectivo: getFormatDatatime(item.finServicioEfectivo || defaultDateTime),
       linea: line[0],
-      itinerario: itinerary[0]
-    }
+      itinerario: itinerary[0],
+    });
   }
 
   async create(createKmAnalisiDto: CreateKmAnalisiDto) {
-    try{
-      const created = await Promise.all(createKmAnalisiDto.data.map(async(item) => {
-        const dataAssigned = await this.assignData(item)
-        item = {
-          ...item,
-          ...dataAssigned
-        }
-        const { fecha } = item
-        const  linea = item.linea.id
 
-        //Revisar validación.
-        const dataFound = await this.multiFilter({ fecha, linea })
-        if(dataFound.length > 0) {
-          throw new 
-          BadRequestException(
-            'Se encuentraron registros asociados a la fecha y ruta.',
-            'ruta'
-          )
-        }
-        const data = this.kmAnalisisRepository.create(item)
-        return await this.kmAnalisisRepository.save(data)
-      }))
+    const created = await Promise.all(
+      createKmAnalisiDto.data
+        .map(async (item) => {
+          const dataAssigned = await this.assignData(item);
+          item = {
+            ...item,
+            ...dataAssigned,
+          };
+          const { fecha, idSae } = item;
+          const linea = item.linea.id
 
-      return created
+          //Revisar validación.
+          const dataFound = await this.multiFilter({ fecha, linea, idSae });
+          if (dataFound.length > 0) {
+            return null;
+          }
+          const data = this.kmAnalisisRepository.create(item);
+          return await this.kmAnalisisRepository.save(data);
+        })
+        .filter((item) => item !== null),
+    )
+    const cleanedItems = created.filter((item) => item !== null);
+
+    if (cleanedItems.length < 1) {
+      throw new BadRequestException(
+        'Ya existen registros asociados a esta ruta en la fecha que quiere registrar.',
+        'DUPLICIDAD',
+      )
     }
-    catch(e){
-      if(e.serverName) {
-        throw new BadRequestException(
-          'Se ha producido un error en el origen de los datos, por favor intente más tarde. Si el error persiste comuniquese con la persona encarga del soporte del aplicativo.',
-          'Base de datos'
-        )
-      }
-    }
+
+    return created;
   }
 
   findAll() {
-    return this.kmAnalisisRepository.find()
+    return this.kmAnalisisRepository.find();
   }
 
-  async multiFilter(filter: any){
-    
-    const { 
-      linea,
-      fecha,
-      itinerario,
-      criterio,
-      kmInicial,
-      kmFinal 
-    } = filter
+  async multiFilter(filter: any) {
+    const { idSae, linea, fecha, itinerario, criterio, kmInicial, kmFinal } =
+      filter;
 
-    if(!linea) {
-      throw new 
-        BadRequestException(
-          'No se encontró query de ruta filtrar.',
-          'ruta'
-        )
+    if (!linea) {
+      throw new BadRequestException(
+        'No se encontró query de ruta filtrar.',
+        'ruta',
+      );
     }
 
-    if(!fecha) {
-      throw new 
-        BadRequestException(
-          'No se encontró query de fecha para filtrar.',
-          'fecha'
-        )
+    if (!fecha) {
+      throw new BadRequestException(
+        'No se encontró query de fecha para filtrar.',
+        'fecha',
+      );
     }
 
-
-    let whereOptions: FindOptionsWhere<KmAnalisis>  = {
+    let whereOptions: FindOptionsWhere<KmAnalisis> = {
       linea: Equal(linea),
-      fecha: getFormatStringDate(fecha)
-    }
+      fecha: getFormatStringDate(fecha),
+    };
 
-    if(itinerario){
+    if (idSae) {
       whereOptions = {
         ...whereOptions,
-        itinerario: Equal(itinerario)
-      }
+        idSae: Equal(idSae),
+      };
     }
 
-    if(kmInicial && kmFinal){
+    if (itinerario) {
       whereOptions = {
         ...whereOptions,
-        distancia: Between(kmInicial, kmFinal)
-      }
+        itinerario: Equal(itinerario),
+      };
     }
 
-    if(criterio){
-       const response = await this.criteriosService.findOne(criterio)
-       if(response.length < 1){
-        throw new 
-          BadRequestException(
-            'No se encontró el criterio seleccionado.'
-          )
-       }
-       const criterioName = response[0].campo
-       const criterioKey =  JSON.parse(`{ "${criterioName}": true }`)
-       whereOptions = {
+    if (kmInicial && kmFinal) {
+      whereOptions = {
         ...whereOptions,
-        ...criterioKey
+        distancia: Between(kmInicial, kmFinal),
+      };
+    }
+
+    if (criterio) {
+      const response = await this.criteriosService.findOne(criterio);
+      if (response.length < 1) {
+        throw new BadRequestException(
+          'No se encontró el criterio seleccionado.',
+        );
       }
-    } 
+      const criterioName = response[0].campo;
+      const criterioKey = JSON.parse(`{ "${criterioName}": true }`);
+      whereOptions = {
+        ...whereOptions,
+        ...criterioKey,
+      };
+    }
 
     const response = await this.kmAnalisisRepository
-    .createQueryBuilder('km')
-    .innerJoinAndSelect('km.itinerario', 'i',   'i.id  = km.itinerario')
-    .innerJoinAndSelect('km.linea', 'r',  'r.id = km.linea')
-    .innerJoinAndSelect('km.incidencia', 'inci',  'inci.id = km.incidencia')
-    .where(whereOptions)
-    .getMany()
+      .createQueryBuilder('km')
+      .innerJoinAndSelect('km.itinerario', 'i', 'i.id  = km.itinerario')
+      .innerJoinAndSelect('km.linea', 'r', 'r.id = km.linea')
+      .innerJoinAndSelect('km.incidencia', 'inci', 'inci.id = km.incidencia')
+      .where(whereOptions)
+      .getMany();
 
-    //const zonaHorariaColombia = 'SA Pacific Standard Time'; 
-    return response
+    //const zonaHorariaColombia = 'SA Pacific Standard Time';
+    return response;
   }
 
   async update(updateKmAnalisiDto: UpdateKmAnalisiDto) {
     const updated = updateKmAnalisiDto.data.map(async (item) => {
-      const dataAssigned = await this.assignData(item)
-      const { id } = item
+      const dataAssigned = await this.assignData(item);
+      const { id } = item;
       item = {
         ...item,
-        ...dataAssigned
-      }
+        ...dataAssigned,
+      };
 
-      delete item.id
-      try{
-        const update = this.kmAnalisisRepository.create(item)       
-        return this.kmAnalisisRepository.update({ id }, update )
-      }catch(e){
-         throw new InternalServerErrorException('Error de base de datos')
+      delete item.id;
+      try {
+        const update = this.kmAnalisisRepository.create(item);
+        return this.kmAnalisisRepository.update({ id }, update);
+      } catch (e) {
+        throw new InternalServerErrorException('Error de base de datos');
       }
-      
-    })
+    });
 
-    return updated
+    return updated;
   }
 }
