@@ -1,15 +1,15 @@
 import { ApiTags } from "@nestjs/swagger";
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { HorariosIitinerarioService } from "./horarios-itinerarios.service";
-import { CreateHorariosItinerarioDto } from "./dto/create-horarios-itinerario.dto";
-import { UpdateHorariosItinerarioDto } from "./dto/update-horarios-itinerario.dto";
+import { HorariosItinerarioService } from "../services/horarios-itinerarios.service";
+import { CreateHorariosItinerarioDto } from "../dto/create-horarios-itinerario.dto";
+import { UpdateHorariosItinerarioDto } from "../dto/update-horarios-itinerario.dto";
 
 @ApiTags('Horarios Itinerarios')
 @Controller('horarios-itinerario')
 
 export class HorariosItinerariosController {
 
-    constructor(private readonly horariosItinerariosService: HorariosIitinerarioService) {}
+    constructor(private readonly horariosItinerariosService: HorariosItinerarioService) {}
 
     @Post()
     create(@Body() createHorariosItinerarioDto: CreateHorariosItinerarioDto){

@@ -3,7 +3,7 @@ import { Itinerario } from './itinerario.entity';
 import { Ruta } from '../../rutas/entities/ruta.entity';
 
 @Entity()
-export class HorariosIitinerario {
+export class HorariosItinerario {
     @PrimaryGeneratedColumn() id: number
 
     @ManyToOne(() => Ruta, ruta => ruta.id)

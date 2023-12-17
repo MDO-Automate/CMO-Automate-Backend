@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Patch, Param, Delete, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { RutasService } from './rutas.service';
-import { CreateRutaDto } from './dto/create-ruta.dto';
-import { UpdateRutaDto } from './dto/update-ruta.dto';
+import { RutasService } from '../services/rutas.service';
+import { CreateRutaDto } from '../dto/create-ruta.dto';
+import { UpdateRutaDto } from '../dto/update-ruta.dto';
 
 
 @ApiTags('Rutas')

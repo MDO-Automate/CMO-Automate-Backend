@@ -1,9 +1,11 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Ruta } from './entities/ruta.entity';
+import { Ruta } from '../entities/ruta.entity';
 import { Repository } from 'typeorm';
-import { CreateRutaDto } from './dto/create-ruta.dto';
-import { UpdateRutaDto } from './dto/update-ruta.dto';
+import { CreateRutaDto } from '../dto/create-ruta.dto';
+import { UpdateRutaDto } from '../dto/update-ruta.dto';
+import { FOREIGNKEY } from '@utils/errosCodes';
+import { errorHandlerForeignkey } from '@utils/errosHandler';
 
 @Injectable()
 export class RutasService {
@@ -62,13 +64,16 @@ export class RutasService {
       throw new BadRequestException ('No se encontró una ruta con ese ID.')
     }
     try {
-      this.rutasRepository.delete({id})
+      await this.rutasRepository.delete({id})
       return {
         status: 200,
         message: `Se ha eliminado el ID: ${id}`
       }
     } catch (err) {
-      throw new BadRequestException(err)
+      errorHandlerForeignkey(err, 'ruta')
+      throw new BadRequestException(
+        'Error al intentar eliminar esta ruta, pongase en contacto con soporte.'
+      )
     }
   }
 }

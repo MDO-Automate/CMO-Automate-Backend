@@ -3,7 +3,7 @@ import { CreateInformeGeneralDto } from './dto/create-informe-general.dto';
 import { InformeGeneral } from './entities/informe-general.entity';
 import { Between, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RutasService } from '../rutas/rutas.service';
+import { RutasService } from '../rutas/services/rutas.service';
 import { firstDayOfMonth, getFormatStringDate, lastDayOfMonth } from '@utils/date';
 import { getDataKmByItinerary } from '@utils/getDataKm';
 import { IResumenElectrica } from '@models/resumenElectrica';

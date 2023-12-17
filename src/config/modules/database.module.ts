@@ -8,7 +8,7 @@ import { KmAnalisis }           from    '@modules/kilometers/modules/km-analisis
 import { ResumenElectrica }     from    '@modules/kilometers/modules/resumen-electrica/entities/resumen-electrica.entity';
 import { Ruta }                 from    '@modules/kilometers/modules/rutas/entities/ruta.entity';
 import { Circulacion }          from    '@modules/kilometers/modules/rutas/entities/circulacion.entity';
-import { HorariosIitinerario }  from    '@modules/kilometers/modules/itinerarios/entities/horarios-itinerario.entity';
+import { HorariosItinerario }  from    '@modules/kilometers/modules/itinerarios/entities/horarios-itinerario.entity';
 import { Festivos }             from    '@modules/kilometers/modules/festivos/entities/festivo.entity';
 import { KmIncidencia } from '@modules/kilometers/modules/km-analisis/entities/km-incidencias.entity';
 
@@ -20,7 +20,7 @@ const entities =  [
   KmAnalisis,
   ResumenElectrica,
   Circulacion,
-  HorariosIitinerario,
+  HorariosItinerario,
   Festivos,
   KmIncidencia
 ]

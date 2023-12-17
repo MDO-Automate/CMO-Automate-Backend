@@ -11,9 +11,9 @@ import { CreateKmAnalisiDto } from '../dto/create-km-analisi.dto';
 import { UpdateKmAnalisiDto } from '../dto/update-km-analisi.dto';
 import { KmProcessFileService } from './km-processfile.service';
 import { getFormatDatatime, getFormatStringDate } from 'src/utils/date';
-import { CriteriosService } from '../../criterios/criterios.service';
-import { RutasService } from '../../rutas/rutas.service';
-import { ItinerariosService } from '../../itinerarios/itinerarios.service';
+import { CriteriosService } from '../../criterios/services/criterios.service';
+import { RutasService } from '../../rutas/services/rutas.service';
+import { ItinerariosService } from '../../itinerarios/services/itinerarios.service';
 import { CreateKmAnalisiArrayDto } from '../dto/create-km-analisisArray.dto';
 
 @Injectable()

@@ -1,9 +1,10 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { Circulacion } from './entities/circulacion.entity';
+import { Circulacion } from '../entities/circulacion.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateCirculationDTO } from './dto/create-circulation.dto';
-import { UpdateCirculationDTO } from './dto/update-circulation.dto';
+import { CreateCirculationDTO } from '../dto/create-circulation.dto';
+import { UpdateCirculationDTO } from '../dto/update-circulation.dto';
+import { errorHandlerForeignkey } from '@utils/errosHandler';
 
 
 @Injectable()
@@ -72,13 +73,14 @@ export class CirculationService {
       throw new BadRequestException ('No se encontró una circulación con ese ID.')
     }
     try {
-      this.circulationRepository.delete({ id })
+      await this.circulationRepository.delete({ id })
       return {
         status: 200,
         message: `Se ha eliminado el ID: ${id}`
       }
     }
     catch(err){
+      errorHandlerForeignkey(err, 'circulación')
       throw new BadRequestException(err)
     }
   }

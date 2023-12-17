@@ -6,18 +6,18 @@ import { KmProcessFileService } from './services/km-processfile.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KmAnalisis } from './entities/km-analisis.entity';
 import { RutasModule } from '../rutas/rutas.module';
-import { RutasDetailsService } from '../rutas/rutas-details.service';
-import { CriteriosService } from '../criterios/criterios.service';
-import { RutasService } from '../rutas/rutas.service';
-import { ItinerariosService } from '../itinerarios/itinerarios.service';
+import { RutasDetailsService } from '../rutas/services/rutas-details.service';
+import { CriteriosService } from '../criterios/services/criterios.service';
+import { RutasService } from '../rutas/services/rutas.service';
+import { ItinerariosService } from '../itinerarios/services/itinerarios.service';
 import { ItinerariosModule } from '../itinerarios/itinerarios.module';
 import { ResumenElectricaService } from '../resumen-electrica/resumen-electrica.service';
 import { ResumenElectricaModule } from '../resumen-electrica/resumen-electrica.module';
 import { InformeGeneralService } from '../informe-general/informe-general.service';
 import { InformeGeneralModule } from '../informe-general/informe-general.module';
-import { CirculationService } from '../rutas/circulation.service';
-import { HorariosIitinerarioService } from '../itinerarios/horarios-itinerarios.service';
-import { CalculateCriteriosService } from '../criterios/calculate-criterios.service';
+import { CirculationService } from '../rutas/services/circulation.service';
+import { HorariosItinerarioService } from '../itinerarios/services/horarios-itinerarios.service';
+import { CalculateCriteriosService } from '../criterios/services/calculate-criterios.service';
 import { CriteriosModule } from '../criterios/criterios.module';
 import { FestivosModule } from '../festivos/festivos.module';
 import { FestivosService } from '../festivos/festivos.service';
@@ -49,7 +49,7 @@ import { KmIncidenciaController } from './controllers/km-incidencia.controller';
     ResumenElectricaService,
     InformeGeneralService,
     CirculationService,
-    HorariosIitinerarioService,
+    HorariosItinerarioService,
     CalculateCriteriosService,
     FestivosService,
     KmIncidenciaServices

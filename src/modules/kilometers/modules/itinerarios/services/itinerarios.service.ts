@@ -1,9 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateItinerarioDto } from './dto/create-itinerario.dto';
-import { UpdateItinerarioDto } from './dto/update-itinerario.dto';
-import { Itinerario } from './entities/itinerario.entity';
+import { CreateItinerarioDto } from '../dto/create-itinerario.dto';
+import { UpdateItinerarioDto } from '../dto/update-itinerario.dto';
+import { Itinerario } from '../entities/itinerario.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FOREIGNKEY } from '@utils/errosCodes';
+import { errorHandlerForeignkey } from '@utils/errosHandler';
 
 @Injectable()
 export class ItinerariosService {
@@ -51,12 +53,13 @@ export class ItinerariosService {
       throw new BadRequestException('No se encontró un itinerario con ese ID')
     }
     try {
-      this.itinerarioRepository.delete({id})
+      await this.itinerarioRepository.delete({id})
       return {
         status: 200,
         message: `Se ha eliminado el ID: ${id}`
       }
     } catch(err) {
+      errorHandlerForeignkey(err, 'itinerario')
       throw new BadRequestException(err)
     }
   }

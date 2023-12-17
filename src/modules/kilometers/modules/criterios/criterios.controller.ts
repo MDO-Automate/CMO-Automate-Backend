@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { CriteriosService } from './criterios.service';
+import { CriteriosService } from './services/criterios.service';
 import { CreateCriterioDto } from './dto/create-criterio.dto';
 import { UpdateCriterioDto } from './dto/update-criterio.dto';
 

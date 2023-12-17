@@ -4,6 +4,7 @@ import { KmIncidencia } from '../entities/km-incidencias.entity';
 import { Repository } from 'typeorm';
 import { CreateIncidenciaDTO } from '../dto/create-km-incidencia.dto';
 import { UpdateIncidenciaDTO } from '../dto/update-km-incidencia.dto';
+import { errorHandlerForeignkey } from '@utils/errosHandler';
 
 @Injectable()
 export class KmIncidenciaServices {
@@ -54,12 +55,13 @@ export class KmIncidenciaServices {
             throw new BadRequestException('No se encontró una incidencia con ese ID')
         }
         try {
-            this.kmInicidenciaRepository.delete({id})
+            await this.kmInicidenciaRepository.delete({id})
             return {
                 status: 200,
                 message: `Se ha eliminado el ID ${id}`
             }
         } catch (err) {
+            errorHandlerForeignkey(err, 'incidencia')
             throw new BadRequestException(err)
         }
     }

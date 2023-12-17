@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
-import { HorariosIitinerarioService } from '../itinerarios/horarios-itinerarios.service';
+import { HorariosItinerarioService } from '../../itinerarios/services/horarios-itinerarios.service';
 import { KmAnalisis } from '@models/kmAnalisis';
 import { differenceFiveMinutes, getDayType, getFormatDate } from '@utils/date';
-import { CirculationService } from '../rutas/circulation.service';
-import { FestivosService } from '../festivos/festivos.service';
+import { CirculationService } from '../../rutas/services/circulation.service';
+import { FestivosService } from '../../festivos/festivos.service';
 
 @Injectable()
 export class CalculateCriteriosService {
   constructor(
-    private horariosIitinerarioService:   HorariosIitinerarioService,
+    private horariosItinerarioService:   HorariosItinerarioService,
     private circulationService:           CirculationService,
     private festivosService:              FestivosService
   ) {}
@@ -68,7 +68,7 @@ export class CalculateCriteriosService {
   async differenceItineraryEndHour(item: KmAnalisis) {
 
     try{
-      const service = this.horariosIitinerarioService;
+      const service = this.horariosItinerarioService;
     
       const currentDate = item.inicioServicio.split(' ')[0];
       const itinerary = await service.getEndHourByItineraryAndRoute(

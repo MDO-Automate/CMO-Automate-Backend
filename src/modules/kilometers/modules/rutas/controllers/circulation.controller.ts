@@ -1,8 +1,8 @@
 
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { CirculationService } from './circulation.service';
-import { CreateCirculationDTO } from './dto/create-circulation.dto';
-import { UpdateCirculationDTO } from './dto/update-circulation.dto';
+import { CirculationService } from '../services/circulation.service';
+import { CreateCirculationDTO } from '../dto/create-circulation.dto';
+import { UpdateCirculationDTO } from '../dto/update-circulation.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Circulación')

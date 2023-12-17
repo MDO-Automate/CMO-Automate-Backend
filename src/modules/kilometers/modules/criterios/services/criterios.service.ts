@@ -1,9 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateCriterioDto } from './dto/create-criterio.dto';
-import { UpdateCriterioDto } from './dto/update-criterio.dto';
-import { Criterio } from './entities/criterio.entity';
+import { CreateCriterioDto } from '../dto/create-criterio.dto';
+import { UpdateCriterioDto } from '../dto/update-criterio.dto';
+import { Criterio } from '../entities/criterio.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FOREIGNKEY } from '@utils/errosCodes';
+import { errorHandlerForeignkey } from '@utils/errosHandler';
 
 @Injectable()
 export class CriteriosService {
@@ -55,12 +57,13 @@ export class CriteriosService {
       throw new BadRequestException('No se encontró un criterio con ese ID');
     }
     try {
-      this.criterioRepository.delete({id})
+      await this.criterioRepository.delete({id})
       return {
         status: 200,
         message: `Se ha borrado el criterio con ID: ${id}`
       }
     } catch (err) {
+      errorHandlerForeignkey(err, 'criterio')
       throw new BadRequestException(err)
     }
   }

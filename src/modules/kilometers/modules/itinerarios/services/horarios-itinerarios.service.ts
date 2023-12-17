@@ -1,19 +1,21 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { HorariosIitinerario } from './entities/horarios-itinerario.entity';
+import { HorariosItinerario } from '../entities/horarios-itinerario.entity';
 import {Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ItinerariosService } from './itinerarios.service';
-import { RutasService } from '../rutas/rutas.service';
-import { CreateHorariosItinerarioDto } from './dto/create-horarios-itinerario.dto';
-import { UpdateHorariosItinerarioDto } from './dto/update-horarios-itinerario.dto';
+import { RutasService } from '../../rutas/services/rutas.service';
+import { CreateHorariosItinerarioDto } from '../dto/create-horarios-itinerario.dto';
+import { UpdateHorariosItinerarioDto } from '../dto/update-horarios-itinerario.dto';
+import { FOREIGNKEY } from '@utils/errosCodes';
+import { errorHandlerForeignkey } from '@utils/errosHandler';
 
 
 @Injectable()
-export class HorariosIitinerarioService {
+export class HorariosItinerarioService {
 
     constructor(
-        @InjectRepository(HorariosIitinerario) 
-        private horariosItiRepository: Repository<HorariosIitinerario>,
+        @InjectRepository(HorariosItinerario) 
+        private horariosItiRepository: Repository<HorariosItinerario>,
         private itineraryService: ItinerariosService,
         private routeService: RutasService
     ){}
@@ -63,12 +65,13 @@ export class HorariosIitinerarioService {
             throw new BadRequestException('No se encontró una relacion entre horario y un itinerario con ese ID')
         }
         try {
-            this.horariosItiRepository.delete({id})
+            await this.horariosItiRepository.delete({id})
             return {
                 status: 200,
                 message: `Se ha eliminado el ID: ${id}`
             }
         } catch(err) {
+            errorHandlerForeignkey(err, 'horario itinerario')
             throw new BadRequestException(err)
         }
     }

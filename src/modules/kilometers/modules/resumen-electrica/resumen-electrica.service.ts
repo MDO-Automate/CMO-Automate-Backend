@@ -6,7 +6,7 @@ import { CreateResumenElectricaDto } from './dto/create-resumen-electrica.dto'
 import { UpdateResumenElectricaDto } from './dto/update-resumen-electrica.dto'
 
 import { ResumenElectrica } from './entities/resumen-electrica.entity'
-import { RutasService } from '../rutas/rutas.service'
+import { RutasService } from '../rutas/services/rutas.service'
 import { getFormatStringDate } from '@utils/date'
 import { getDataKmByVeh } from '@utils/getDataKm'
 import { KmAnalisis } from '@models/kmAnalisis'

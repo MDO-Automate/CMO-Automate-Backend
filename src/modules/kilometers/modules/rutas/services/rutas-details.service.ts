@@ -5,7 +5,7 @@ import { Repository } from 'typeorm'
 import { getAaverageRoute } from '@utils/getAverageRoute'
 import { getDayType, getFormatDate } from '@utils/date'
 
-import { Ruta } from './entities/ruta.entity'
+import { Ruta } from '../entities/ruta.entity'
 
 @Injectable()
 export class RutasDetailsService {
