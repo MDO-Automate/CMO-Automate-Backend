@@ -90,6 +90,13 @@ export class KmAnalisisService {
       return created;
 
     }catch(e){
+      if(e.response.error ===  'DUPLICIDAD'){
+        throw new BadRequestException(
+          e.response.message,
+          e.response.error
+        )
+      }
+
       throw new BadRequestException(
         'Ha ocurrido un error inesperado, si continúa pasando contactar con soporte técnico.',
         'Error',
