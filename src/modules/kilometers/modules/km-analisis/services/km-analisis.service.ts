@@ -56,37 +56,46 @@ export class KmAnalisisService {
 
   async create(createKmAnalisiDto: CreateKmAnalisiDto) {
 
-    const created = await Promise.all(
-      createKmAnalisiDto.data
-        .map(async (item) => {
-          const dataAssigned = await this.assignData(item);
-          item = {
-            ...item,
-            ...dataAssigned,
-          };
-          const { fecha, idSae } = item;
-          const linea = item.linea.id
+    try{
+      const created = await Promise.all(
+        createKmAnalisiDto.data
+          .map(async (item) => {
+            const dataAssigned = await this.assignData(item);
+            item = {
+              ...item,
+              ...dataAssigned,
+            };
+            const { fecha, idSae } = item;
+            const linea = item.linea.id
+  
+            //Revisar validación.
+            const dataFound = await this.multiFilter({ fecha, linea, idSae });
+            if (dataFound.length > 0) {
+              return null;
+            }
+            const data = this.kmAnalisisRepository.create(item);
+            return await this.kmAnalisisRepository.save(data);
+          })
+          .filter((item) => item !== null),
+      )
+      const cleanedItems = created.filter((item) => item !== null);
+  
+      if (cleanedItems.length < 1) {
+        throw new BadRequestException(
+          'Ya existen registros asociados a esta ruta en la fecha que quiere registrar.',
+          'DUPLICIDAD',
+        )
+      }
+  
+      return created;
 
-          //Revisar validación.
-          const dataFound = await this.multiFilter({ fecha, linea, idSae });
-          if (dataFound.length > 0) {
-            return null;
-          }
-          const data = this.kmAnalisisRepository.create(item);
-          return await this.kmAnalisisRepository.save(data);
-        })
-        .filter((item) => item !== null),
-    )
-    const cleanedItems = created.filter((item) => item !== null);
-
-    if (cleanedItems.length < 1) {
+    }catch(e){
       throw new BadRequestException(
-        'Ya existen registros asociados a esta ruta en la fecha que quiere registrar.',
-        'DUPLICIDAD',
+        'Ha ocurrido un error inesperado, si continúa pasando contactar con soporte técnico.',
+        'Error',
       )
     }
 
-    return created;
   }
 
   findAll() {
